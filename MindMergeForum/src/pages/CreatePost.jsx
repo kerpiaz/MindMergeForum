@@ -1,0 +1,38 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../config/firebase.config";
+import { createPost } from "../../hoc/createPost";
+
+export default function CreatePost() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleCreatePost = async (e) => {
+    e.preventDefault();
+    if (title.length < 16 || title.length > 64 || content.length < 32 || content.length > 8192) {
+      setError("The title and the content must be valid!");
+      return;
+    }
+
+    try {
+      await createPost(title, content, auth.currentUser.uid);
+      navigate("/forum");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div>
+      <h2>Create new post</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <form onSubmit={handleCreatePost}>
+        <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <textarea placeholder="Content" value={content} onChange={(e) => setContent(e.target.value)} required />
+        <button type="Submit">Post</button>
+      </form>
+    </div>
+  );
+}
