@@ -4,16 +4,16 @@ import { getDatabase } from 'firebase/database';
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
- 
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAopgmpG3n_0UQ8O7XCtXqNLp8tWGY_Z6k",
-  authDomain: "myapplication-7fc7722d.firebaseapp.com",
-  databaseURL: "https://myapplication-7fc7722d-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "myapplication-7fc7722d",
-  storageBucket: "myapplication-7fc7722d.firebasestorage.app",
-  messagingSenderId: "798684416591",
-  appId: "1:798684416591:web:d082ec029c707fcce0f83a"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
