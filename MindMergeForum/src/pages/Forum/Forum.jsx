@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { getPosts, likePost, deletePost } from "../../hoc/createPost";
-import { auth } from "../config/firebase.config";
+import { getPosts, likePost, deletePost } from "../../../services/posts.service";
+import { auth } from "../../config/firebase.config";
 
 export default function Forum() {
-  const [posts, setPosts] = useState({});
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     async function fetchPosts() {
@@ -32,15 +32,15 @@ export default function Forum() {
 
   return (
     <div>
-      <h2>Forum</h2>
+      <h2>Форум</h2>
       {Object.entries(posts).map(([postId, post]) => (
         <div key={postId} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
           <h3>{post.title}</h3>
           <p>{post.content}</p>
           <p>❤️ {post.likes}</p>
-          <button onClick={() => handleLike(postId, post.likes)}>Like</button>
+          <button onClick={() => handleLike(postId, post.likes)}>Харесай</button>
           {auth.currentUser && auth.currentUser.uid === post.userId && (
-            <button onClick={() => handleDelete(postId)}>Delete</button>
+            <button onClick={() => handleDelete(postId)}>Изтрий</button>
           )}
         </div>
       ))}
