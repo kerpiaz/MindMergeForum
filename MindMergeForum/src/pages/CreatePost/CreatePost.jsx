@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "../../../services/posts.service";
+import { createPost } from "../../../services/posts.services";
 import { auth } from "../../config/firebase.config";
+
 export default function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -33,7 +34,9 @@ export default function CreatePost() {
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleCreatePost}>
         <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <br/> <br/>
         <textarea placeholder="Content" value={content} onChange={(e) => setContent(e.target.value)} required />
+        <br/> <br/>
         <button type="Submit">Post</button>
       </form>
     </div>

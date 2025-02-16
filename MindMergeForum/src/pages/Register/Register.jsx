@@ -1,32 +1,78 @@
-import { useState } from "react";
-import { registerUser } from "../../../services/auth.service";
+import { AppContext } from "../../store/app.context";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../../services/auth.services";
+import { createUserHandle, getUserByHandle } from "../../../services/user.services";
 
 export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      await registerUser(email, password);
-      navigate("/forum");
-    } catch (err) {
-      setError(err.message);
+    const { setAppState } = useContext(AppContext)
+
+    //state only for this specific component! It is not our context!
+    const [user, setUser] = useState({
+        handle: '',
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+    });
+
+    const navigate = useNavigate();
+
+    const register = () => {
+
+        if (!user.email || !user.password) {
+            return alert('Please enter email and password')
+        }
+        getUserByHandle(user.handle)
+        .then(userFromDb=>{
+            if(userFromDb){
+                throw new Error(`User with username "${user.handle} already exists"`)
+            }
+
+            return registerUser(user.email, user.password)
+        })
+        .then(userCredential=>{
+            return createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName)
+            .then(()=>{
+                setAppState({
+                    user: userCredential.user,
+                    userData: null,
+                });
+                navigate('/')
+            })
+        })
+        .catch((error)=>console.error(error.message))
     }
-  };
 
-  return (
-    <div>
-      <h2>Sign up</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleRegister}>
-        <input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Sign up</button>
-      </form>
-    </div>
-  );
+    const updateUser = (prop) => (e) => {
+        setUser({
+            ...user,
+            [prop]: e.target.value
+        })
+    }
+
+    return (
+        <div>
+            <h3>Register</h3>
+            <div>
+                <label htmlFor="firstName">First Name: </label>
+                <input value={user.firstName} onChange={updateUser('firstName')} type="text" name="firstName" id="firstName" />
+                <br /><br />
+                <label htmlFor="lastName">Last Name: </label>
+                <input value={user.lastName} onChange={updateUser('lastName')} type="text" name="lastName" id="lastName" />
+                <br /><br />
+                <label htmlFor="handle">Username: </label>
+                <input value={user.handle} onChange={updateUser('handle')} type="text" name="handle" id="handle" />
+                <br /><br />
+                <label htmlFor="email">Email: </label>
+                <input value={user.email} onChange={updateUser('email')} type="text" name="email" id="email" />
+                <br /><br />
+                <label htmlFor="password">Password: </label>
+                <input value={user.password} onChange={updateUser('password')} type="password" name="password" id="password" />
+                <br /><br />
+                <button onClick={register} >Register</button>
+            </div>
+        </div>
+    )
 }

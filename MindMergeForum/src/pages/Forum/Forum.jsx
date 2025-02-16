@@ -1,25 +1,34 @@
-import { useState, useEffect } from "react";
-import { getPosts, likePost, deletePost } from "../../../services/posts.service";
+import { useState, useEffect} from "react";
+import { getPosts, deletePost} from "../../../services/posts.services";
 import { auth } from "../../config/firebase.config";
+import {useNavigate} from 'react-router-dom'
+import { getUserById } from "../../../services/user.services";
 
 export default function Forum() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState({});
+  const [userHandles, setUserHandles] = useState({});
+  const navigation = useNavigate();
 
-  useEffect(() => {
-    async function fetchPosts() {
-      const fetchedPosts = await getPosts();
-      setPosts(fetchedPosts);
+useEffect(()=>{
+  const fetchPostsAndHandles = async () => {
+    try {
+      const data = await getPosts();
+      setPosts(data);
+
+      const handles = {};
+      for (const postId in data) {
+        const post = data[postId];
+        const userData = await getUserById(post.userId);
+        handles[post.userId] = userData.handle;
+      }
+      setUserHandles(handles);
+    } catch (error) {
+      console.error(error.message);
     }
-    fetchPosts();
-  }, []);
-
-  const handleLike = async (postId, likes) => {
-    await likePost(postId, likes);
-    setPosts((prevPosts) => ({
-      ...prevPosts,
-      [postId]: { ...prevPosts[postId], likes: likes + 1 }
-    }));
   };
+
+  fetchPostsAndHandles();
+}, [])
 
   const handleDelete = async (postId) => {
     await deletePost(postId);
@@ -32,16 +41,19 @@ export default function Forum() {
 
   return (
     <div>
-      <h2>Форум</h2>
+      <h2>Forum</h2>
       {Object.entries(posts).map(([postId, post]) => (
         <div key={postId} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
           <h3>{post.title}</h3>
+          <h6>Created by: {userHandles[post.userId]}</h6>
           <p>{post.content}</p>
-          <p>❤️ {post.likes}</p>
-          <button onClick={() => handleLike(postId, post.likes)}>Харесай</button>
-          {auth.currentUser && auth.currentUser.uid === post.userId && (
-            <button onClick={() => handleDelete(postId)}>Изтрий</button>
-          )}
+          <p>❤️ {post.likes ? post.likes.length : 0} </p>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button onClick={() => { navigation(`/posts/${postId}`) }}>See More</button>
+            {auth.currentUser && auth.currentUser.uid === post.userId && (
+              <button onClick={() => handleDelete(postId)}>Delete</button>
+            )}
+          </div>
         </div>
       ))}
     </div>
