@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loginUser } from "../../../services/auth.service";
+import { loginUser } from "../../../services/auth.services";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -24,7 +24,9 @@ export default function Login() {
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <br/> <br/>
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <br/> <br/>
         <button type="submit">Log in</button>
       </form>
     </div>
