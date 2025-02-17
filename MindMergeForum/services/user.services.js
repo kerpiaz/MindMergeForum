@@ -10,13 +10,14 @@ export const getUserByHandle = async (handle) => {
 
 };
 
-export const createUserHandle = async (handle, uid, email, firstName, lastName) => {
+export const createUserHandle = async (handle, uid, email, firstName, lastName, phone) => {
   const user = {
       handle,
       uid,
       email,
       firstName,
       lastName,
+      phone,
       createdOn: new Date().toString(),
   };
 
