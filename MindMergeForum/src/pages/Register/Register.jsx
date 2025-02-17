@@ -15,15 +15,25 @@ export default function Register() {
         password: '',
         firstName: '',
         lastName: '',
+        phone: '',
     });
 
     const navigate = useNavigate();
 
     const register = () => {
 
-        if (!user.email || !user.password) {
-            return alert('Please enter email and password')
+        if (!user.email || !user.password ||!user.firstName||!user.lastName) {
+            return alert('Please fill in all fields')
         }
+
+        if(user.firstName.length<4 || user.firstName.length>32){
+            return alert('Your first name must be between 4 and 32 characters')
+        }
+
+        if(user.lastName.length<4 || user.lastName.length>32){
+            return alert('Your last name must be between 4 and 32 characters')
+        }
+        
         getUserByHandle(user.handle)
         .then(userFromDb=>{
             if(userFromDb){
@@ -33,7 +43,7 @@ export default function Register() {
             return registerUser(user.email, user.password)
         })
         .then(userCredential=>{
-            return createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName)
+            return createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName, user.phone)
             .then(()=>{
                 setAppState({
                     user: userCredential.user,
@@ -64,6 +74,9 @@ export default function Register() {
                 <br /><br />
                 <label htmlFor="handle">Username: </label>
                 <input value={user.handle} onChange={updateUser('handle')} type="text" name="handle" id="handle" />
+                <br /><br />
+                <label htmlFor="phone">Phone (optional): </label>
+                <input value={user.phone} onChange={updateUser('phone')} type="text" name="phone" id="phone" />
                 <br /><br />
                 <label htmlFor="email">Email: </label>
                 <input value={user.email} onChange={updateUser('email')} type="text" name="email" id="email" />
