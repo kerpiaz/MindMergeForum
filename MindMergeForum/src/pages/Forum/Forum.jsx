@@ -13,7 +13,7 @@ useEffect(()=>{
   const fetchPostsAndHandles = async () => {
     try {
       const data = await getPosts();
-      setPosts(data);
+      setPosts(data||{});
 
       const handles = {};
       for (const postId in data) {
@@ -31,18 +31,25 @@ useEffect(()=>{
 }, [])
 
   const handleDelete = async (postId) => {
-    await deletePost(postId);
-    setPosts((prevPosts) => {
-      const updatedPosts = { ...prevPosts };
-      delete updatedPosts[postId];
-      return updatedPosts;
-    });
+    try {
+      await deletePost(postId);
+      setPosts((prevPosts) => {
+        const updatedPosts = { ...prevPosts };
+        delete updatedPosts[postId];
+        return updatedPosts;
+      });
+    } catch (error) {
+      console.error("Error deleting post:", error.message);
+    }
   };
 
   return (
     <div>
-      <h2>Forum</h2>
-      {Object.entries(posts).map(([postId, post]) => (
+    <h2>Forum</h2>
+    {Object.keys(posts).length === 0 ? (
+      <p>No posts available</p>
+    ) : (
+      Object.entries(posts).map(([postId, post]) => (
         <div key={postId} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
           <h3>{post.title}</h3>
           <h6>Created by: {userHandles[post.userId]}</h6>
@@ -55,7 +62,8 @@ useEffect(()=>{
             )}
           </div>
         </div>
-      ))}
-    </div>
-  );
+      ))
+    )}
+  </div>
+);
 }

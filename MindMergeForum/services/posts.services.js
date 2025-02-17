@@ -19,15 +19,12 @@ export const createPost = async (title, content, userId) => {
     }
   };
   export const getPosts = async () => {
-    const snapshot = await get(ref(db, 'posts'))
-    if(!snapshot.exists){
-      return [];
+    const snapshot = await get(ref(db, 'posts'));
+    if (!snapshot.exists) {
+      return {};
     }
   
-    const posts = Object.values(snapshot.val());
-
-    return posts;
-  
+    return snapshot.val();
   };
   // export const likePost = async (postId, userId) => {
   //   const postRef = ref(db, `posts/${postId}`);
@@ -65,11 +62,13 @@ export const createPost = async (title, content, userId) => {
   
     return update(ref(db), updatedPost)
   }
-export const deletePost = async (postId) => {
+
+  export const deletePost = async (postId) => {
     try {
-        await remove(ref(db, `posts/${postId}`));
-        console.log("The post was deleted successfully!");
+      await remove(ref(db, `posts/${postId}`));
+      console.log("The post was deleted successfully!");
     } catch (error) {
-        console.error("Error deleting post:", error);
+      console.error("Error deleting post:", error);
+      throw error; // Ensure the error is thrown to be caught in the calling function
     }
-};
+  };
