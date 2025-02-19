@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../../services/auth.services";
 import { createUserHandle, getUserByHandle } from "../../../services/user.services";
+import { Roles } from "../../../common/roles.enum";
 
 export default function Register() {
 
@@ -15,6 +16,7 @@ export default function Register() {
         password: '',
         firstName: '',
         lastName: '',
+        role:Roles.user,
         phone: '',
     });
 
@@ -43,7 +45,7 @@ export default function Register() {
             return registerUser(user.email, user.password)
         })
         .then(userCredential=>{
-            return createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName, user.phone)
+            return createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName, user.phone, user.role)
             .then(()=>{
                 setAppState({
                     user: userCredential.user,

@@ -5,6 +5,7 @@ export const AppContext = createContext({
     userData: {
         firstName: '',
         lastName: '',
+        role: '',
       },
     setAppState: ()=>{},
 });

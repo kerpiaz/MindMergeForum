@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../../src/store/app.context";
 import { useContext } from "react";
 import { logoutUser } from "../../services/auth.services";
+import { Roles } from "../../common/roles.enum";
 
 export default function Header() {
 
@@ -25,7 +26,15 @@ export default function Header() {
       <h1>MindMerge Forum</h1>
       <nav>
         <NavLink to="/">Home</NavLink>
-        {user && (
+        {user && userData && userData.role === Roles.admin && (
+          <>
+            <NavLink to="/forum">Forum</NavLink>
+            <NavLink to="/user-profile">My Profile</NavLink>
+            <NavLink to="/create-post">Create Post</NavLink>
+            <NavLink to="/admin-tools">Admin Tools</NavLink>
+          </>
+        )}
+        {user && userData && userData.role === Roles.user && (
           <>
             <NavLink to="/forum">Forum</NavLink>
             <NavLink to="/user-profile">My Profile</NavLink>
