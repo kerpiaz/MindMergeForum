@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { loginUser } from "../../../services/auth.services";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../store/app.context";
+import { Roles } from "../../../common/roles.enum";
+import { getUserData } from "../../../services/user.services";
 
 export default function Login() {
+  const { setAppState } = useContext(AppContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,8 +15,21 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await loginUser(email, password);
-      navigate("/forum");
+      const userCredential = await loginUser(email, password);
+      const user = userCredential.user;
+      const userData = await getUserData(user.uid);
+      const userRole = userData[Object.keys(userData)[0]].role;
+
+      setAppState({
+        user,
+        userData: userData[Object.keys(userData)[0]],
+      });
+
+      if (userRole === Roles.banned) {
+        navigate("/banned");
+      } else {
+        navigate("/forum");
+      }
     } catch (err) {
       setError(err.message);
     }

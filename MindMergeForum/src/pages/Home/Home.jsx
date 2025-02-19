@@ -11,7 +11,7 @@ export default function Home() {
       const totalUsers = await getTotalUsers();
       setTotalUsers(totalUsers);
       const posts = await getPosts()
-      const totalPosts = Object.keys(posts).length;
+      const totalPosts = posts?Object.keys(posts).length:0;
       setTotalPosts(totalPosts);
     }
     fetchTotalUsersAndPosts();

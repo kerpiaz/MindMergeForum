@@ -15,6 +15,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import Profile from '../components/Profile/Profile';
 import Post from '../components/Post/Post';
 import './App.css';
+import BannedUser from "../components/BannedUser/BannedUser";
+import AdminTools from "./pages/AdminTools/AdminTools";
 
 function App() {
 
@@ -56,8 +58,10 @@ function App() {
           <Route path="/create-post" element={<Authenticated><CreatePost /></Authenticated>} />
           <Route path="/posts/:id" element={<Authenticated><Post /></Authenticated>} />
           <Route path="/user-profile" element={<Authenticated><Profile /></Authenticated>} />
+          <Route path="/admin-tools" element={<Authenticated><AdminTools /></Authenticated>} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/banned" element={<Authenticated><BannedUser /></Authenticated>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <footer>&copy;2025</footer>
