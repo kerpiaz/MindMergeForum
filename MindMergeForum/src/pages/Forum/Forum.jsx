@@ -54,7 +54,7 @@ useEffect(()=>{
           <h3>{post.title}</h3>
           <h6>Created by: {userHandles[post.userId]}</h6>
           <p>{post.content}</p>
-          <p>❤️ {post.likes ? post.likes.length : 0} </p>
+          <p>Likes: {post.likedBy ? Object.keys(post.likedBy).length : 0}</p>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={() => { navigation(`/posts/${postId}`) }}>See More</button>
             {auth.currentUser && auth.currentUser.uid === post.userId && (
