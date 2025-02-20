@@ -53,11 +53,11 @@ useEffect(()=>{
       <p>No posts available</p>
     ) : (
       Object.entries(posts).map(([postId, post]) => (
-        <div key={postId} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
+        <div key={postId} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px", width: "600px"}}>
           <h3>{post.title}</h3>
           <h6>Created by: {userHandles[post.userId]}</h6>
           <p>{post.content}</p>
-          <p>Likes: {post.likedBy ? Object.keys(post.likedBy).length : 0}</p>
+          <p>❤️ {post.likedBy ? Object.keys(post.likedBy).length : 0} 💬 {post.comments? Object.keys(post.comments).length : 0}</p>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={() => { navigation(`/posts/${postId}`) }}>See More</button>
             {(auth.currentUser && auth.currentUser.uid === post.userId) || (userData && userData.role === Roles.admin) ? (
