@@ -8,8 +8,7 @@ import { Roles } from "../../../common/roles.enum";
 export default function Register() {
 
     const { setAppState } = useContext(AppContext)
-
-    //state only for this specific component! It is not our context!
+    
     const [user, setUser] = useState({
         handle: '',
         email: '',
@@ -22,40 +21,44 @@ export default function Register() {
 
     const navigate = useNavigate();
 
-    const register = () => {
-
-        if (!user.email || !user.password ||!user.firstName||!user.lastName) {
-            return alert('Please fill in all fields')
-        }
-
-        if(user.firstName.length<4 || user.firstName.length>32){
-            return alert('Your first name must be between 4 and 32 characters')
-        }
-
-        if(user.lastName.length<4 || user.lastName.length>32){
-            return alert('Your last name must be between 4 and 32 characters')
-        }
-        
-        getUserByHandle(user.handle)
-        .then(userFromDb=>{
-            if(userFromDb){
-                throw new Error(`User with username "${user.handle} already exists"`)
+    const register = async () => {
+        try {
+          if (!user.email || !user.password || !user.firstName || !user.lastName) {
+            return alert('Please fill in all fields');
+          }
+    
+          if (user.firstName.length < 4 || user.firstName.length > 32) {
+            return alert('Your first name must be between 4 and 32 characters');
+          }
+    
+          if (user.lastName.length < 4 || user.lastName.length > 32) {
+            return alert('Your last name must be between 4 and 32 characters');
+          }
+            if (isNaN(user.phone)) {
+            return alert('Please enter a valid phone number');
             }
-
-            return registerUser(user.email, user.password)
-        })
-        .then(userCredential=>{
-            return createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName, user.phone, user.role)
-            .then(()=>{
-                setAppState({
-                    user: userCredential.user,
-                    userData: null,
-                });
-                navigate('/')
-            })
-        })
-        .catch((error)=>console.error(error.message))
-    }
+    
+          const userFromDb = await getUserByHandle(user.handle);
+          if (userFromDb) {
+            return alert(`User with username "${user.handle}" already exists`);
+          }
+    
+          const userCredential = await registerUser(user.email, user.password);
+          await createUserHandle(user.handle, userCredential.user.uid, user.email, user.firstName, user.lastName, user.phone, user.role);
+    
+          setAppState({
+            user: userCredential.user,
+            userData: null,
+          });
+          navigate('/');
+        } catch (error) {
+          if (error.code === 'auth/email-already-in-use') {
+            alert('The email address is already in use by another account.');
+          } else {
+            alert(`Error: ${error.message}`);
+          }
+        }
+      };
 
     const updateUser = (prop) => (e) => {
         setUser({
@@ -81,7 +84,7 @@ export default function Register() {
                 <input value={user.phone} onChange={updateUser('phone')} type="text" name="phone" id="phone" />
                 <br /><br />
                 <label htmlFor="email">Email: </label>
-                <input value={user.email} onChange={updateUser('email')} type="text" name="email" id="email" />
+                <input value={user.email} onChange={updateUser('email')} type="email" name="email" id="email" />
                 <br /><br />
                 <label htmlFor="password">Password: </label>
                 <input value={user.password} onChange={updateUser('password')} type="password" name="password" id="password" />
