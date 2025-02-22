@@ -1,5 +1,4 @@
-
-import { ref, push, get, set, remove, update } from "firebase/database";
+import { ref, push, get, remove, update } from "firebase/database";
 import { db } from "../src/config/firebase.config";
 
 export const createPost = async (title, content, userId) => {
@@ -26,25 +25,7 @@ export const createPost = async (title, content, userId) => {
   
     return snapshot.val();
   };
-  // export const likePost = async (postId, userId) => {
-  //   const postRef = ref(db, `posts/${postId}`);
-  //   const snapshot = await get(postRef);
-  //   if (snapshot.exists()) {
-  //     const post = snapshot.val();
-  //     const likes = post.likes || [];
-  //     if (likes.includes(userId)) {
-  //       // Unlike the post
-  //       const updatedLikes = likes.filter(id => id !== userId);
-  //       await update(postRef, { likes: updatedLikes });
-  //     } else {
-  //       // Like the post
-  //       const updatedLikes = [...likes, userId];
-  //       await update(postRef, { likes: updatedLikes });
-  //     }
-  //   }
-  // };
 
-  //Will use these options for handling likes and unlikes as it is way simpler
   export const likePost = async(handle, postId) =>{
     const updatedPost =  {
       [`posts/${postId}/likedBy/${handle}`]:true,
@@ -69,6 +50,11 @@ export const createPost = async (title, content, userId) => {
       console.log("The post was deleted successfully!");
     } catch (error) {
       console.error("Error deleting post:", error);
-      throw error; // Ensure the error is thrown to be caught in the calling function
+      throw error;
     }
+  };
+
+  export const updatePost = async (postId, updatedData) => {
+    const postRef = ref(db, `posts/${postId}`);
+    await update(postRef, updatedData);
   };
