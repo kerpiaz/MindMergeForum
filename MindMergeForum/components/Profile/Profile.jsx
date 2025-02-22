@@ -118,6 +118,7 @@ export default function Profile() {
           <p>Username: {userData.handle}</p>
           <p>First Name: {userData.firstName}</p>
           <p>Last Name: {userData.lastName}</p>
+          <p>Email: {userData.email}</p>
           <p>Phone Number: {userData.phone}</p>
           <p>Current role: {userData.role}</p>
           <button onClick={handleEdit}>Edit</button>
