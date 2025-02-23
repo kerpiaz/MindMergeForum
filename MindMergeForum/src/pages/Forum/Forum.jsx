@@ -12,8 +12,9 @@ export default function Forum() {
   const [editingPost, setEditingPost] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
-  // STATE: Add sorting control state
-  const [sortBy, setSortBy] = useState("uploadDate"); // 'comments' or 'uploadDate'
+  // FEATURE: Enhanced sorting state (criteria + direction)
+  const [sortCriteria, setSortCriteria] = useState("uploadDate");
+  const [sortDirection, setSortDirection] = useState("desc");
 
   useEffect(() => {
     const fetchPostsAndHandles = async () => {
@@ -36,23 +37,25 @@ export default function Forum() {
     fetchPostsAndHandles();
   }, []);
 
-  // FEATURE: Implement sorting logic with memoization
+  // FEATURE: Enhanced sorting logic with direction control
   const sortedPosts = useMemo(() => {
     const postsArray = Object.entries(posts);
-    
-    if (sortBy === "comments") {
-      return postsArray.sort((a, b) => {
-        const aComments = a[1].comments ? Object.keys(a[1].comments).length : 0;
-        const bComments = b[1].comments ? Object.keys(b[1].comments).length : 0;
-        return bComments - aComments; // Descending: most comments first
+    const sortModifier = sortDirection === 'asc' ? 1 : -1;
+  
+    if (sortCriteria === 'comments') {
+      return [...postsArray].sort((a, b) => { // postArray to shadow copy before sorting
+        const aCount = a[1].comments ? Object.keys(a[1].comments).length : 0;
+        const bCount = b[1].comments ? Object.keys(b[1].comments).length : 0;
+        return (bCount - aCount) * sortModifier;
       });
     }
-    return postsArray.sort((a, b) => {
+  
+    return [...postsArray].sort((a, b) => {
       const aDate = new Date(a[1].createdOn);
       const bDate = new Date(b[1].createdOn);
-      return bDate - aDate; // Descending: newest first
+      return (bDate - aDate) * sortModifier;
     });
-  }, [posts, sortBy]);
+  }, [posts, sortCriteria, sortDirection]);
 
   const handleDelete = async (postId) => {
     try {
@@ -93,28 +96,55 @@ export default function Forum() {
   return (
     <div>
       <h2>Forum</h2>
-      {/* FEATURE: Add sorting controls */}
+      {/* FEATURE: Enhanced sorting UI with criteria/direction controls */}
       <div className="sort-controls">
-        <label>
-          <input
-            type="radio"
-            name="sortBy"
-            value="comments"
-            checked={sortBy === "comments"}
-            onChange={() => setSortBy("comments")}
-          />
-          Most Comments
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="sortBy"
-            value="uploadDate"
-            checked={sortBy === "uploadDate"}
-            onChange={() => setSortBy("uploadDate")}
-          />
-          Newest First
-        </label>
+        <div className="criteria-controls">
+          <span>Sort by:</span>
+          <label>
+            <input
+              type="radio"
+              name="criteria"
+              value="comments"
+              checked={sortCriteria === "comments"}
+              onChange={(e) => setSortCriteria(e.target.value)}
+            />
+            Comments
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="criteria"
+              value="uploadDate"
+              checked={sortCriteria === "uploadDate"}
+              onChange={(e) => setSortCriteria(e.target.value)}
+            />
+            Date
+          </label>
+        </div>
+
+        <div className="direction-controls">
+          <span>Order:</span>
+          <label>
+            <input
+              type="radio"
+              name="direction"
+              value="asc"
+              checked={sortDirection === "asc"}
+              onChange={(e) => setSortDirection(e.target.value)}
+            />
+            Ascending
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="direction"
+              value="desc"
+              checked={sortDirection === "desc"}
+              onChange={(e) => setSortDirection(e.target.value)}
+            />
+            Descending
+          </label>
+        </div>
       </div>
 
       {sortedPosts.length === 0 ? (
