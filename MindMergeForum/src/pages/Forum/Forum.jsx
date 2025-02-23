@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from "react";
+// FEATURE: Add sorting functionality imports
+import { useState, useEffect, useContext, useMemo } from "react";
 import { getPosts, deletePost, updatePost } from "../../../services/posts.services";
 import { getUserById } from "../../../services/user.services";
 import { AppContext } from "../../store/app.context";
@@ -11,6 +12,8 @@ export default function Forum() {
   const [editingPost, setEditingPost] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
+  // STATE: Add sorting control state
+  const [sortBy, setSortBy] = useState("uploadDate"); // 'comments' or 'uploadDate'
 
   useEffect(() => {
     const fetchPostsAndHandles = async () => {
@@ -32,6 +35,24 @@ export default function Forum() {
 
     fetchPostsAndHandles();
   }, []);
+
+  // FEATURE: Implement sorting logic with memoization
+  const sortedPosts = useMemo(() => {
+    const postsArray = Object.entries(posts);
+    
+    if (sortBy === "comments") {
+      return postsArray.sort((a, b) => {
+        const aComments = a[1].comments ? Object.keys(a[1].comments).length : 0;
+        const bComments = b[1].comments ? Object.keys(b[1].comments).length : 0;
+        return bComments - aComments; // Descending: most comments first
+      });
+    }
+    return postsArray.sort((a, b) => {
+      const aDate = new Date(a[1].createdOn);
+      const bDate = new Date(b[1].createdOn);
+      return bDate - aDate; // Descending: newest first
+    });
+  }, [posts, sortBy]);
 
   const handleDelete = async (postId) => {
     try {
@@ -72,10 +93,34 @@ export default function Forum() {
   return (
     <div>
       <h2>Forum</h2>
-      {Object.keys(posts).length === 0 ? (
+      {/* FEATURE: Add sorting controls */}
+      <div className="sort-controls">
+        <label>
+          <input
+            type="radio"
+            name="sortBy"
+            value="comments"
+            checked={sortBy === "comments"}
+            onChange={() => setSortBy("comments")}
+          />
+          Most Comments
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="sortBy"
+            value="uploadDate"
+            checked={sortBy === "uploadDate"}
+            onChange={() => setSortBy("uploadDate")}
+          />
+          Newest First
+        </label>
+      </div>
+
+      {sortedPosts.length === 0 ? (
         <p>No posts available</p>
       ) : (
-        Object.entries(posts).map(([postId, post]) => (
+        sortedPosts.map(([postId, post]) => (
           <ForumRender
             key={postId}
             postId={postId}
