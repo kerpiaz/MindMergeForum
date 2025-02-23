@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../src/store/app.context';
 import { updateUser } from '../../services/user.services';
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const { userData, setAppState } = useContext(AppContext);
@@ -11,6 +12,8 @@ export default function Profile() {
     phone: '',
     loading: true,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userData) {
@@ -63,6 +66,10 @@ export default function Profile() {
       alert(`Error updating profile: ${error.message}`);
     }
   };
+
+  const handleChangePassword = () =>{
+    navigate("/password-change")
+  }
 
   const handleCancel = () => {
     setState({
@@ -121,7 +128,8 @@ export default function Profile() {
           <p>Email: {userData.email}</p>
           <p>Phone Number: {userData.phone}</p>
           <p>Current role: {userData.role}</p>
-          <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleEdit} style={{marginRight: `10px`}}>Edit</button>
+          <button onClick = {handleChangePassword}>Change Password</button>
         </>
       )}
     </div>

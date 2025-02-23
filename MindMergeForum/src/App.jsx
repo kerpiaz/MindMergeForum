@@ -17,6 +17,7 @@ import Post from '../components/Post/Post';
 import './App.css';
 import BannedUser from "../components/BannedUser/BannedUser";
 import AdminTools from "./pages/AdminTools/AdminTools";
+import PasswordChange from '../components/PasswordChange/PasswordChange'
 
 function App() {
 
@@ -62,9 +63,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/banned" element={<Authenticated><BannedUser /></Authenticated>} />
+          <Route path="/password-change" element={<Authenticated><PasswordChange /></Authenticated>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <footer>&copy;2025</footer>
       </AppContext.Provider>
     </BrowserRouter>
   );
