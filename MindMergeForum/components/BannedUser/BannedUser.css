@@ -1,0 +1,128 @@
+/* Banned User Page Styling */
+.banned-container {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.banned-card {
+  background-color: #1a222e;
+  border-radius: 0.5rem;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.banned-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #991b1b;
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #fee2e2;
+}
+
+.banned-title {
+  color: #ef4444;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.banned-message {
+  color: #9ca3af;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.banned-details {
+  background-color: #242937;
+  border-radius: 0.375rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #374151;
+  text-align: left;
+}
+
+.banned-details-title {
+  color: #e5e7eb;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.banned-details-text {
+  color: #9ca3af;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.banned-details ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.banned-details li {
+  margin-bottom: 0.5rem;
+}
+
+/* Decorative elements */
+.banned-card::before,
+.banned-card::after {
+  content: "";
+  position: absolute;
+  background-color: #991b1b;
+  opacity: 0.1;
+}
+
+.banned-card::before {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+}
+
+.banned-card::after {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  bottom: -75px;
+  left: -75px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .banned-container {
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+
+  .banned-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .banned-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .banned-title {
+    font-size: 2rem;
+  }
+
+  .banned-message {
+    font-size: 1rem;
+  }
+}

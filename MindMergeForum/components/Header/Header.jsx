@@ -21,6 +21,18 @@ export default function Header() {
       .catch((error) => console.error(error.message))
   }
 
+  // If user is banned, only show the logo
+  if (userData?.role === Roles.banned) {
+    return (
+      <header className="navbar">
+        <h1 className="logo">MindMerge Forum</h1>
+        <div className="user-section">
+          {user && <button className="logout-btn" onClick={logout}>Log Out</button>}
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="navbar">
       <h1 className="logo">MindMerge Forum</h1>
