@@ -62,7 +62,6 @@ export default function Profile() {
       // Update both user data and profile picture
       await Promise.all([
         updateUser(userData.handle, updateData),
-        update(dbRef(db, `users/${userData.uid}`), updateData)
       ]);
 
       setAppState((prevState) => ({
