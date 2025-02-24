@@ -1,0 +1,155 @@
+/* CSS Variables for Theming */
+:root {
+  --primary-color: #ff7b2c;
+  --primary-light: #ffd699;
+  --background-dark: #1a1d24;
+  --background-medium: #242937;
+  --text-light: #e5e7eb;
+  --text-muted: #9ca3af;
+}
+
+/* Main Layout */
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.hero-section {
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.hero-title {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* Stats Section */
+.stats-section {
+  margin-bottom: 4rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.stat-card {
+  background-color: var(--background-medium);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  text-align: left;
+}
+
+.stat-number {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+/* Features Section */
+.features-section {
+  background-color: var(--background-medium);
+  padding: 3rem;
+  border-radius: 1rem;
+  margin-bottom: 4rem;
+}
+
+.features-title {
+  color: var(--text-light);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.feature-card {
+  background-color: var(--background-dark);
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+.feature-title {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.feature-description {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Action Buttons */
+.button-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 4rem;
+}
+
+.primary-button {
+  background-color: var(--primary-light);
+  color: var(--background-dark);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.secondary-button {
+  background-color: transparent;
+  color: var(--primary-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--primary-light);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.primary-button:hover {
+  background-color: #ffb84d;
+}
+
+.secondary-button:hover {
+  background-color: rgba(255, 214, 153, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .button-container {
+    flex-direction: column;
+  }
+}
