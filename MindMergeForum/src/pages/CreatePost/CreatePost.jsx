@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../../../services/posts.services";
 import { auth } from "../../config/firebase.config";
+import "./CreatePost.css";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
@@ -29,15 +30,83 @@ export default function CreatePost() {
   };
 
   return (
-    <div>
-      <h2>Create new post</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="create-post-container">
+      <h2 className="page-title">Create New Post</h2>
+      <p className="page-description">
+        Share your thoughts, questions, or insights with the community.
+      </p>
+
+      <div className="guidelines-card">
+        <h3 className="guidelines-title">Posting Guidelines</h3>
+        <div className="guidelines-list">
+          <div className="guideline-item">
+            <span className="guideline-icon">✓</span>
+            <span className="guideline-text">
+              Title should be clear and descriptive (16-64 characters)
+            </span>
+          </div>
+          <div className="guideline-item">
+            <span className="guideline-icon">✓</span>
+            <span className="guideline-text">
+              Content should be detailed and well-explained (32-8192 characters)
+            </span>
+          </div>
+          <div className="guideline-item">
+            <span className="guideline-icon">✓</span>
+            <span className="guideline-text">
+              Be respectful and constructive in your writing
+            </span>
+          </div>
+          <div className="guideline-item">
+            <span className="guideline-icon">✓</span>
+            <span className="guideline-text">
+              Check for similar posts before creating a new one
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {error && <div className="error-message">{error}</div>}
+
       <form onSubmit={handleCreatePost}>
-        <input type="text" placeholder="Post title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-        <br/> <br/>
-        <textarea placeholder="Post content" value={content} rows="6" cols="50"  onChange={(e) => setContent(e.target.value)} required />
-        <br/> <br/>
-        <button type="Submit">Post</button>
+        <div className="form-section">
+          <label className="form-label">
+            Title
+            <span className="required-marker">*</span>
+          </label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Enter a descriptive title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <div className="character-counter">
+            {title.length}/64 characters
+          </div>
+        </div>
+
+        <div className="form-section">
+          <label className="form-label">
+            Content
+            <span className="required-marker">*</span>
+          </label>
+          <textarea
+            className="form-textarea"
+            placeholder="Write your post content here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            required
+          />
+          <div className="character-counter">
+            {content.length}/8192 characters
+          </div>
+        </div>
+
+        <button type="submit" className="submit-button">
+          Create Post
+        </button>
       </form>
     </div>
   );
