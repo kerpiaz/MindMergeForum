@@ -4,6 +4,7 @@ import { getPosts, deletePost, updatePost } from "../../../services/posts.servic
 import { getUserById } from "../../../services/user.services";
 import { AppContext } from "../../store/app.context";
 import ForumRender from "../../../components/ForumRender/ForumRender";
+import "./Forum.css";
 
 export default function Forum() {
   const { userData } = useContext(AppContext);
@@ -43,7 +44,7 @@ export default function Forum() {
     const sortModifier = sortDirection === 'asc' ? 1 : -1;
   
     if (sortCriteria === 'comments') {
-      return [...postsArray].sort((a, b) => { // postArray to shadow copy before sorting
+      return [...postsArray].sort((a, b) => {
         const aCount = a[1].comments ? Object.keys(a[1].comments).length : 0;
         const bCount = b[1].comments ? Object.keys(b[1].comments).length : 0;
         return (bCount - aCount) * sortModifier;
@@ -94,56 +95,67 @@ export default function Forum() {
   };
 
   return (
-    <div>
-      <h2>Forum</h2>
+    <div className="forum-container">
+      <div className="forum-header">
+        <h2 className="forum-title">Forum</h2>
+      </div>
+      
       {/* FEATURE: Enhanced sorting UI with criteria/direction controls */}
-      <div className="sort-controls">
-        <div className="criteria-controls">
-          <span>Sort by:</span>
-          <label>
-            <input
-              type="radio"
-              name="criteria"
-              value="comments"
-              checked={sortCriteria === "comments"}
-              onChange={(e) => setSortCriteria(e.target.value)}
-            />
-            Comments
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="criteria"
-              value="uploadDate"
-              checked={sortCriteria === "uploadDate"}
-              onChange={(e) => setSortCriteria(e.target.value)}
-            />
-            Date
-          </label>
+      <div className="filter-controls">
+        <div className="filter-group">
+          <span className="filter-label">Sort by:</span>
+          <div className="radio-group">
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="criteria"
+                value="comments"
+                checked={sortCriteria === "comments"}
+                onChange={(e) => setSortCriteria(e.target.value)}
+                id="sort-comments"
+              />
+              <label htmlFor="sort-comments">Comments</label>
+            </div>
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="criteria"
+                value="uploadDate"
+                checked={sortCriteria === "uploadDate"}
+                onChange={(e) => setSortCriteria(e.target.value)}
+                id="sort-date"
+              />
+              <label htmlFor="sort-date">Date</label>
+            </div>
+          </div>
         </div>
 
-        <div className="direction-controls">
-          <span>Order:</span>
-          <label>
-            <input
-              type="radio"
-              name="direction"
-              value="asc"
-              checked={sortDirection === "asc"}
-              onChange={(e) => setSortDirection(e.target.value)}
-            />
-            Ascending
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="direction"
-              value="desc"
-              checked={sortDirection === "desc"}
-              onChange={(e) => setSortDirection(e.target.value)}
-            />
-            Descending
-          </label>
+        <div className="filter-group">
+          <span className="filter-label">Order:</span>
+          <div className="radio-group">
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="direction"
+                value="asc"
+                checked={sortDirection === "asc"}
+                onChange={(e) => setSortDirection(e.target.value)}
+                id="order-asc"
+              />
+              <label htmlFor="order-asc">Ascending</label>
+            </div>
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="direction"
+                value="desc"
+                checked={sortDirection === "desc"}
+                onChange={(e) => setSortDirection(e.target.value)}
+                id="order-desc"
+              />
+              <label htmlFor="order-desc">Descending</label>
+            </div>
+          </div>
         </div>
       </div>
 
