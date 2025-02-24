@@ -58,3 +58,27 @@ export const createPost = async (title, content, userId) => {
     const postRef = ref(db, `posts/${postId}`);
     await update(postRef, updatedData);
   };
+
+  export const getPostsByTitle = async (search = '') => {
+    const snapshot = await get(ref(db, 'posts'));
+    if (snapshot.exists()) {
+      if (search) {
+        const posts = Object.values(snapshot.val());
+        return posts.filter(post => post.title.toLowerCase().includes(search.toLowerCase()));
+      }
+      return Object.values(snapshot.val());
+    }
+    return {};
+  };
+  
+  export const getPostsByContent = async (search = '') => {
+    const snapshot = await get(ref(db, 'posts'));
+    if (snapshot.exists()) {
+      if (search) {
+        const posts = Object.values(snapshot.val());
+        return posts.filter(post => post.content.toLowerCase().includes(search.toLowerCase()));
+      }
+      return Object.values(snapshot.val());
+    }
+    return {};
+  };

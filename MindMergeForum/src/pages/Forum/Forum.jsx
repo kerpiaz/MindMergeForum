@@ -1,6 +1,5 @@
-// FEATURE: Add sorting functionality imports
 import { useState, useEffect, useContext, useMemo } from "react";
-import { getPosts, deletePost, updatePost } from "../../../services/posts.services";
+import { getPosts, deletePost, updatePost, getPostsByTitle, getPostsByContent } from "../../../services/posts.services";
 import { getUserById } from "../../../services/user.services";
 import { AppContext } from "../../store/app.context";
 import ForumRender from "../../../components/ForumRender/ForumRender";
@@ -13,14 +12,24 @@ export default function Forum() {
   const [editingPost, setEditingPost] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
-  // FEATURE: Enhanced sorting state (criteria + direction)
   const [sortCriteria, setSortCriteria] = useState("uploadDate");
   const [sortDirection, setSortDirection] = useState("desc");
+  const [searchCriteria, setSearchCriteria] = useState("title");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchPostsAndHandles = async () => {
       try {
-        const data = await getPosts();
+        let data;
+        if (searchQuery) {
+          if (searchCriteria === "title") {
+            data = await getPostsByTitle(searchQuery);
+          } else {
+            data = await getPostsByContent(searchQuery);
+          }
+        } else {
+          data = await getPosts();
+        }
         setPosts(data || {});
 
         const handles = {};
@@ -39,9 +48,8 @@ export default function Forum() {
     };
 
     fetchPostsAndHandles();
-  }, []);
+  }, [searchQuery, searchCriteria]);
 
-  // FEATURE: Enhanced sorting logic with direction control
   const sortedPosts = useMemo(() => {
     const postsArray = Object.entries(posts);
     const sortModifier = sortDirection === 'asc' ? 1 : -1;
@@ -102,9 +110,42 @@ export default function Forum() {
       <div className="forum-header">
         <h2 className="forum-title">Forum</h2>
       </div>
-      
-      {/* FEATURE: Enhanced sorting UI with criteria/direction controls */}
       <div className="filter-controls">
+        <div className="filter-group">
+          <span className="filter-label">Search by:</span>
+          <div className="radio-group">
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="searchCriteria"
+                value="title"
+                checked={searchCriteria === "title"}
+                onChange={(e) => setSearchCriteria(e.target.value)}
+                id="search-title"
+              />
+              <label htmlFor="search-title">Title</label>
+            </div>
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="searchCriteria"
+                value="content"
+                checked={searchCriteria === "content"}
+                onChange={(e) => setSearchCriteria(e.target.value)}
+                id="search-content"
+              />
+              <label htmlFor="search-content">Content</label>
+            </div>
+          </div>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         <div className="filter-group">
           <span className="filter-label">Sort by:</span>
           <div className="radio-group">
