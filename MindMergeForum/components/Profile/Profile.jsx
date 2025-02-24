@@ -1,18 +1,23 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../src/store/app.context';
 import { updateUser } from '../../services/user.services';
 import { useNavigate } from 'react-router-dom';
+import { storage, db } from '../../src/config/firebase.config';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref as dbRef, update } from 'firebase/database';
+import './Profile.css';
 
 export default function Profile() {
   const { userData, setAppState } = useContext(AppContext);
   const [state, setState] = useState({
     isEditing: false,
-    firstName: '',
-    lastName: '',
-    phone: '',
-    loading: true,
+    firstName: userData?.firstName || '',
+    lastName: userData?.lastName || '',
+    phone: userData?.phone || '',
+    loading: !userData,
+    profilePicture: userData?.profilePicture || null
   });
-
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,12 +28,13 @@ export default function Profile() {
         lastName: userData.lastName || '',
         phone: userData.phone || '',
         loading: false,
+        profilePicture: userData.profilePicture || null
       });
     }
   }, [userData]);
 
   const handleEdit = () => {
-    setState((prevState) => ({ ...prevState, isEditing: true }));
+    setState(prevState => ({ ...prevState, isEditing: true }));
   };
 
   const handleSave = async () => {
@@ -46,19 +52,24 @@ export default function Profile() {
         return alert('Please enter a valid phone number');
       }
 
-      await updateUser(userData.handle, {
+      const updateData = {
         firstName: state.firstName,
         lastName: state.lastName,
         phone: state.phone,
-      });
+        profilePicture: state.profilePicture // Include profile picture in update
+      };
+
+      // Update both user data and profile picture
+      await Promise.all([
+        updateUser(userData.handle, updateData),
+        update(dbRef(db, `users/${userData.uid}`), updateData)
+      ]);
 
       setAppState((prevState) => ({
         ...prevState,
         userData: {
           ...prevState.userData,
-          firstName: state.firstName,
-          lastName: state.lastName,
-          phone: state.phone,
+          ...updateData
         },
       }));
       setState((prevState) => ({ ...prevState, isEditing: false }));
@@ -67,71 +78,157 @@ export default function Profile() {
     }
   };
 
-  const handleChangePassword = () =>{
-    navigate("/password-change")
-  }
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !userData?.uid) return;
+
+    try {
+      const imageRef = storageRef(storage, `profilePictures/${userData.uid}`);
+      await uploadBytes(imageRef, file);
+      const downloadURL = await getDownloadURL(imageRef);
+
+      setState(prevState => ({ ...prevState, profilePicture: downloadURL }));
+    } catch (error) {
+      alert(`Error uploading profile picture: ${error.message}`);
+    }
+  };
+
+  const handleChangePassword = () => {
+    navigate("/password-change");
+  };
 
   const handleCancel = () => {
     setState({
       isEditing: false,
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
-      phone: userData.phone || '',
+      firstName: userData?.firstName || '',
+      lastName: userData?.lastName || '',
+      phone: userData?.phone || '',
       loading: false,
+      profilePicture: userData?.profilePicture || null
     });
   };
 
-  if (state.loading) {
-    return <div>Loading...</div>;
-  }
+  if (!userData) return <div className="loading">Please log in to view your profile.</div>;
+  if (state.loading) return <div className="loading">Loading profile...</div>;
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
-      <h2>Profile</h2>
-      {state.isEditing ? (
-        <>
-          <p>
-            <label htmlFor="firstName">First Name:</label>
+    <div className="profile-container">
+      <div className="profile-card">
+        <div className="profile-header">
+          <div className="profile-picture-container">
+            {state.profilePicture ? (
+              <img 
+                src={state.profilePicture} 
+                alt="Profile" 
+                className="profile-picture" 
+              />
+            ) : (
+              <div className="profile-picture">
+                {userData.handle?.[0]?.toUpperCase() || '?'}
+              </div>
+            )}
+            {state.isEditing && (
+              <div 
+                className="profile-picture-edit"
+                onClick={handleProfilePictureClick}
+              >
+                Change Photo
+              </div>
+            )}
             <input
-              id="firstName"
-              type="text"
-              value={state.firstName}
-              onChange={(e) => setState({ ...state, firstName: e.target.value })}
+              type="file"
+              ref={fileInputRef}
+              className="profile-picture-input"
+              accept="image/*"
+              onChange={handleFileChange}
             />
-          </p>
-          <p>
-            <label htmlFor="lastName">Last Name:</label>
-            <input
-              id="lastName"
-              type="text"
-              value={state.lastName}
-              onChange={(e) => setState({ ...state, lastName: e.target.value })}
-            />
-          </p>
-          <p>
-            <label htmlFor="phone">Phone Number:</label>
-            <input
-              id="phone"
-              type="text"
-              value={state.phone}
-              onChange={(e) => setState({ ...state, phone: e.target.value })}
-            />
-          </p>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </>
-      ) : (
-        <>
-          <p>Username: {userData.handle}</p>
-          <p>First Name: {userData.firstName}</p>
-          <p>Last Name: {userData.lastName}</p>
-          <p>Email: {userData.email}</p>
-          <p>Phone Number: {userData.phone}</p>
-          <p>Current role: {userData.role}</p>
-          <button onClick={handleEdit} style={{marginRight: `10px`}}>Edit</button>
-          <button onClick = {handleChangePassword}>Change Password</button>
-        </>
-      )}
+          </div>
+          
+          <div className="profile-info">
+            <div className="profile-username">{userData.handle}</div>
+            <div className="profile-role">{userData.role}</div>
+          </div>
+        </div>
+
+        <div className="profile-details">
+          {state.isEditing ? (
+            <div className="edit-form active">
+              <div className="form-group">
+                <label className="form-label" htmlFor="firstName">First Name</label>
+                <input
+                  id="firstName"
+                  type="text"
+                  className="form-input"
+                  value={state.firstName}
+                  onChange={(e) => setState({ ...state, firstName: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="lastName">Last Name</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  className="form-input"
+                  value={state.lastName}
+                  onChange={(e) => setState({ ...state, lastName: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="phone">Phone Number</label>
+                <input
+                  id="phone"
+                  type="text"
+                  className="form-input"
+                  value={state.phone}
+                  onChange={(e) => setState({ ...state, phone: e.target.value })}
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="detail-item">
+                <span className="detail-label">Email</span>
+                <span className="detail-value">{userData.email}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">First Name</span>
+                <span className="detail-value">{userData.firstName}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Last Name</span>
+                <span className="detail-value">{userData.lastName}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Phone Number</span>
+                <span className="detail-value">{userData.phone}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="action-buttons">
+          {state.isEditing ? (
+            <>
+              <button className="save-button" onClick={handleSave}>Save</button>
+              <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+              <button 
+                className="change-password-button active" 
+                onClick={handleChangePassword}
+              >
+                Change Password
+              </button>
+            </>
+          ) : (
+            <button className="edit-button" onClick={handleEdit}>
+              ✏️
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
