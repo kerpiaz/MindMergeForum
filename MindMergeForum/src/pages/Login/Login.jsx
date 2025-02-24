@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { loginUser } from "../../../services/auth.services";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AppContext } from "../../store/app.context";
 import { Roles } from "../../../common/roles.enum";
 import { getUserData } from "../../../services/user.services";
+import "./Login.css";
 
 export default function Login() {
   const { setAppState } = useContext(AppContext);
@@ -36,16 +37,60 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h2>Log in</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <br/> <br/>
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <br/> <br/>
-        <button type="submit">Log in</button>
-      </form>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Log in</h2>
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label className="form-label">
+              Email
+              <span className="required-marker">*</span>
+            </label>
+            <div className="input-wrapper">
+              <input
+                type="email"
+                className={`form-input ${error ? 'error' : ''}`}
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <span className="input-icon">📧</span>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              Password
+              <span className="required-marker">*</span>
+            </label>
+            <div className="input-wrapper">
+              <input
+                type="password"
+                className={`form-input ${error ? 'error' : ''}`}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span className="input-icon">🔒</span>
+            </div>
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <button type="submit" className="auth-button">
+            Log in
+          </button>
+        </form>
+
+        <p className="account-prompt">
+          Don't have an account?{" "}
+          <Link to="/register" className="signup-link">
+            Sign up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
