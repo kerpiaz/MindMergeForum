@@ -19,7 +19,8 @@ export default function ForumRender({
     userData,
 }) {
     const navigate = useNavigate();
-    const firstLetter = userHandles[post.userId]?.charAt(0).toLowerCase() || 'u';
+    const userProfile = userHandles[post.userId] || {};
+    const firstLetter = userProfile.handle?.charAt(0).toLowerCase() || 'u';
     const avatarClass = `author-avatar avatar-${firstLetter}`;
 
     return (
@@ -52,9 +53,17 @@ export default function ForumRender({
                         <h3 className="post-title">{post.title}</h3>
                         <div className="post-author">
                             <div className={avatarClass}>
-                                {firstLetter.toUpperCase()}
+                                {userProfile.profilePicture ? (
+                                    <img 
+                                        src={userProfile.profilePicture} 
+                                        alt={userProfile.handle} 
+                                        className="profile-picture"
+                                    />
+                                ) : (
+                                    <span>{firstLetter.toUpperCase()}</span>
+                                )}
                             </div>
-                            <span className="author-name">{userHandles[post.userId]}</span>
+                            <span className="author-name">{userProfile.handle}</span>
                         </div>
                     </div>
                     
@@ -104,7 +113,10 @@ ForumRender.propTypes = {
         likedBy: PropTypes.object,
         comments: PropTypes.object,
     }).isRequired,
-    userHandles: PropTypes.object.isRequired,
+    userHandles: PropTypes.objectOf(PropTypes.shape({
+        handle: PropTypes.string.isRequired,
+        profilePicture: PropTypes.string
+    })).isRequired,
     editingPost: PropTypes.string,
     editedTitle: PropTypes.string.isRequired,
     editedContent: PropTypes.string.isRequired,

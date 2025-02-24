@@ -27,7 +27,10 @@ export default function Forum() {
         for (const postId in data) {
           const post = data[postId];
           const userData = await getUserById(post.userId);
-          handles[post.userId] = userData ? userData.handle : "Unknown User";
+          handles[post.userId] = {
+            handle: userData ? userData.handle : "Unknown User",
+            profilePicture: userData ? userData.profilePicture : null
+          };
         }
         setUserHandles(handles);
       } catch (error) {

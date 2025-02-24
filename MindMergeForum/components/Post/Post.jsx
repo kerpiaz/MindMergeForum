@@ -15,20 +15,40 @@ export default function Post() {
   const [editedText, setEditedText] = useState("");
   const [userHandle, setUserHandle] = useState("");
   const [postCreatorHandle, setPostCreatorHandle] = useState("");
+  const [postCreatorProfile, setPostCreatorProfile] = useState(null);
+  const [commentUserProfiles, setCommentUserProfiles] = useState({});
 
   useEffect(() => {
     const postRef = ref(db, `posts/${id}`);
     const unsubscribe = onValue(
       postRef,
-      (snapshot) => {
+      async (snapshot) => {
         const postData = snapshot.val();
         if (postData) {
           setPost(postData);
-          getUserById(postData.userId).then((userData) => {
-            if (userData) {
-              setPostCreatorHandle(userData.handle);
-            }
-          });
+          const userData = await getUserById(postData.userId);
+          if (userData) {
+            setPostCreatorHandle(userData.handle);
+            setPostCreatorProfile(userData.profilePicture);
+          }
+
+          // Fetch profile pictures for commenters
+          // Uses async for single awaits and Promise.all for concurrent commenter data fetches to optimize performance. tnx Grok 3
+          if (postData.comments) {
+            const profiles = {};
+            await Promise.all(
+              Object.values(postData.comments).map(async (comment) => {
+                const commenterData = await getUserById(comment.userId);
+                if (commenterData) {
+                  profiles[comment.userId] = {
+                    handle: commenterData.handle,
+                    profilePicture: commenterData.profilePicture
+                  };
+                }
+              })
+            );
+            setCommentUserProfiles(profiles);
+          }
         } else {
           setPost(null);
         }
@@ -52,9 +72,7 @@ export default function Post() {
     }
   }, [user]);
 
-  if (post === null) {
-    return <div className="post-details-container">Loading...</div>;
-  }
+  if (!post) return <div className="loading">Loading...</div>;
 
   const handleLike = () => {
     if (!user) return;
@@ -115,8 +133,6 @@ export default function Post() {
       });
   };
 
-  const firstLetter = postCreatorHandle.charAt(0).toLowerCase();
-
   return (
     <div className="post-details-container">
       <div className="post-card">
@@ -125,8 +141,16 @@ export default function Post() {
         </div>
         
         <div className="post-meta">
-          <div className={`author-avatar avatar-${firstLetter}`}>
-            {firstLetter.toUpperCase()}
+          <div className="author-avatar">
+            {postCreatorProfile ? (
+              <img 
+                src={postCreatorProfile} 
+                alt={postCreatorHandle} 
+                className="profile-picture"
+              />
+            ) : (
+              <span>{postCreatorHandle?.[0]?.toUpperCase() || '?'}</span>
+            )}
           </div>
           <span className="author-name">{postCreatorHandle}</span>
           <div className="post-date-info">
@@ -186,57 +210,68 @@ export default function Post() {
         </div>
 
         {post.comments ? (
-          Object.entries(post.comments).map(([commentId, commentData]) => (
-            <div key={commentId} className="post-card">
-              {editingComment === commentId ? (
-                <div className="answer-form">
-                  <textarea
-                    className="answer-textarea"
-                    value={editedText}
-                    onChange={(e) => setEditedText(e.target.value)}
-                  />
-                  <div className="post-actions">
-                    <button 
-                      className="submit-answer-button"
-                      onClick={() => handleSaveEdit(commentId)}
-                    >
-                      Save
-                    </button>
-                    <button 
-                      className="submit-answer-button"
-                      onClick={() => setEditingComment(null)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="post-meta">
-                    <div className={`author-avatar avatar-${commentData.userHandle.charAt(0).toLowerCase()}`}>
-                      {commentData.userHandle.charAt(0).toUpperCase()}
-                    </div>
-                    <span className="author-name">{commentData.userHandle}</span>
-                    <div className="post-date-info">
-                      <span className="date-separator">•</span>
-                      <span>{new Date(commentData.createdOn).toLocaleString()}</span>
-                    </div>
-                  </div>
-                  <div className="post-content">
-                    <p>{commentData.text}</p>
-                    {user && user.uid === commentData.userId && (
-                      <button
+          Object.entries(post.comments).map(([commentId, commentData]) => {
+            const userProfile = commentUserProfiles[commentData.userId];
+            return (
+              <div key={commentId} className="post-card">
+                {editingComment === commentId ? (
+                  <div className="answer-form">
+                    <textarea
+                      className="answer-textarea"
+                      value={editedText}
+                      onChange={(e) => setEditedText(e.target.value)}
+                    />
+                    <div className="post-actions">
+                      <button 
                         className="submit-answer-button"
-                        onClick={() => handleEditComment(commentId, commentData.text)}
+                        onClick={() => handleSaveEdit(commentId)}
                       >
-                        Edit
+                        Save
                       </button>
-                    )}
+                      <button 
+                        className="submit-answer-button"
+                        onClick={() => setEditingComment(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                </>
-              )}
-            </div>
-          ))
+                ) : (
+                  <>
+                    <div className="post-meta">
+                      <div className="author-avatar">
+                        {userProfile?.profilePicture ? (
+                          <img 
+                            src={userProfile.profilePicture} 
+                            alt={commentData.userHandle} 
+                            className="profile-picture"
+                          />
+                        ) : (
+                          <span>{commentData.userHandle?.[0]?.toUpperCase() || '?'}</span>
+                        )}
+                      </div>
+                      <span className="author-name">{commentData.userHandle}</span>
+                      <div className="post-date-info">
+                        <span className="date-separator">•</span>
+                        <span>{new Date(commentData.createdOn).toLocaleString()}</span>
+                      </div>
+                    </div>
+                    <div className="post-content">
+                      <p>{commentData.text}</p>
+                      {user && user.uid === commentData.userId && (
+                        <button
+                          className="submit-answer-button"
+                          onClick={() => handleEditComment(commentId, commentData.text)}
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })
         ) : (
           <p className="no-answers-message">No comments yet.</p>
         )}
