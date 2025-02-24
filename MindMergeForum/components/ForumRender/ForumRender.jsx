@@ -19,47 +19,74 @@ export default function ForumRender({
     userData,
 }) {
     const navigate = useNavigate();
+    const firstLetter = userHandles[post.userId]?.charAt(0).toLowerCase() || 'u';
+    const avatarClass = `author-avatar avatar-${firstLetter}`;
 
     return (
-        <div key={postId} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px", width: "600px" }}>
+        <div className="post-item">
             {editingPost === postId ? (
-                <>
+                <div className="post-content">
                     <input
                         type="text"
                         value={editedTitle}
                         onChange={(e) => setEditedTitle(e.target.value)}
                         placeholder="Edit title"
+                        className="post-title"
+                        style={{ width: '100%', marginBottom: '1rem' }}
                     />
-                    <br/><br/>
                     <textarea
                         value={editedContent}
                         onChange={(e) => setEditedContent(e.target.value)}
                         placeholder="Edit content"
                         rows="4"
-                        cols="50"
+                        style={{ width: '100%', marginBottom: '1rem' }}
                     />
-                    {" "}
-                    <button onClick={() => handleSaveEdit(postId)}>Save</button>{" "}
-                    <button onClick={handleCancelEdit}>Cancel</button>
-                </>
+                    <div className="post-actions">
+                        <button className="action-button edit" onClick={() => handleSaveEdit(postId)}>Save</button>
+                        <button className="action-button delete" onClick={handleCancelEdit}>Cancel</button>
+                    </div>
+                </div>
             ) : (
                 <>
-                    <h3>{post.title}</h3>
-                    <h6>Created by: {userHandles[post.userId]} | Created on: {new Date(post.createdOn).toLocaleString()}</h6>
-                    <p>{post.content}</p>
-                    <p>❤️ {post.likedBy ? Object.keys(post.likedBy).length : 0} 💬 {post.comments ? Object.keys(post.comments).length : 0}</p>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <button onClick={() => { navigate(`/posts/${postId}`) }}>See More</button>
-                        {(auth.currentUser && auth.currentUser.uid === post.userId) || (userData && userData.role === Roles.admin) ? (
-                            <>
-                                <button onClick={() => handleDelete(postId)}>Delete</button>
-                            </>
-                        ) : null}
-                        {(auth.currentUser && auth.currentUser.uid === post.userId) ? (
-                            <>
-                                <button onClick={() => handleEdit(postId, post.title, post.content)}>Edit</button>
-                            </>
-                        ) : null}
+                    <div className="post-header">
+                        <h3 className="post-title">{post.title}</h3>
+                        <div className="post-author">
+                            <div className={avatarClass}>
+                                {firstLetter.toUpperCase()}
+                            </div>
+                            <span className="author-name">{userHandles[post.userId]}</span>
+                        </div>
+                    </div>
+                    
+                    <div className="post-content">
+                        <p>{post.content}</p>
+                    </div>
+
+                    <div className="post-footer">
+                        <div className="post-actions">
+                            <button className="action-button see-more" onClick={() => { navigate(`/posts/${postId}`) }}>
+                                See More
+                            </button>
+                            {(auth.currentUser && auth.currentUser.uid === post.userId) && (
+                                <button className="action-button edit" onClick={() => handleEdit(postId, post.title, post.content)}>
+                                    Edit
+                                </button>
+                            )}
+                            {((auth.currentUser && auth.currentUser.uid === post.userId) || (userData && userData.role === Roles.admin)) && (
+                                <button className="action-button delete" onClick={() => handleDelete(postId)}>
+                                    Delete
+                                </button>
+                            )}
+                        </div>
+                        <div className="post-meta">
+                            <span className="comment-count">
+                                ❤️ {post.likedBy ? Object.keys(post.likedBy).length : 0}
+                            </span>
+                            <span className="comment-count">
+                                💬 {post.comments ? Object.keys(post.comments).length : 0}
+                            </span>
+                            <span>{new Date(post.createdOn).toLocaleString()}</span>
+                        </div>
                     </div>
                 </>
             )}
