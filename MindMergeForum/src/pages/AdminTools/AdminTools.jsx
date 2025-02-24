@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { getAllUsers, getAllUsersByEmail, updateUserRole } from "../../../services/user.services";
 import { useSearchParams } from "react-router-dom";
 import { Roles } from "../../../common/roles.enum";
+import "./AdminTools.css";
 
 export default function AdminTools() {
   const [users, setUsers] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [notifications, setNotifications] = useState([]);
   const search = searchParams.get('search') || '';
   const searchMethod = searchParams.get('method') || 'username';
 
@@ -22,12 +24,25 @@ export default function AdminTools() {
         }
         setUsers(data);
       } catch (error) {
-        alert(error.message);
+        showNotification('Error', error.message, 'error');
       }
     };
 
     fetchUsers();
   }, [search, searchMethod]);
+
+  const showNotification = (title, message, type = 'success') => {
+    const id = Date.now();
+    setNotifications(prev => [...prev, { id, title, message, type }]);
+    setTimeout(() => {
+      setNotifications(prev => prev.map(notif => 
+        notif.id === id ? { ...notif, closing: true } : notif
+      ));
+      setTimeout(() => {
+        setNotifications(prev => prev.filter(notif => notif.id !== id));
+      }, 300);
+    }, 5000);
+  };
 
   const handleBan = async (uid) => {
     try {
@@ -39,56 +54,127 @@ export default function AdminTools() {
           user.uid === uid ? { ...user, role: newRole } : user
         )
       );
+      showNotification(
+        'Success',
+        `User ${user.handle} has been ${newRole === Roles.banned ? 'banned' : 'unbanned'}`
+      );
     } catch (error) {
-      alert(error.message);
+      showNotification('Error', error.message, 'error');
+    }
+  };
+
+  const getRoleBadgeClass = (role) => {
+    switch (role) {
+      case Roles.admin:
+        return 'badge-admin';
+      case Roles.banned:
+        return 'badge-banned';
+      default:
+        return 'badge-user';
     }
   };
 
   return (
-    <>
-    <br />
-      <h2>Welcome to your admin tools!</h2>
-      <br /><br />
-      <label>Search users by: </label>
-      <label>
-        <input
-          type="radio"
-          name="method"
-          value="username"
-          checked={searchMethod === 'username'}
-          onChange={(e) => setSearchParams({ method: e.target.value, search })}
-        />
-        Username
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="method"
-          value="email"
-          checked={searchMethod === 'email'}
-          onChange={(e) => setSearchParams({ method: e.target.value, search })}
-        />
-        Email
-      </label>
-      <input
-        type="text"
-        name="search"
-        id="search"
-        value={search}
-        onChange={(e) => setSearchParams({ method: searchMethod, search: e.target.value })}
-        style={{ marginLeft: "10px" }}
-      />
-      <br /><br />
-      {users.length > 0 ? (
-        users.map((u) => (
-          <div key={u.uid} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span>username: {u.handle}{<br />}email: {u.email}</span>
-            <button onClick ={()=>handleBan(u.uid)}>{u.role === 'banned' ? 'Unban':'Ban'}</button>
+    <div className="admin-container">
+      <h1 className="admin-title">Admin Tools</h1>
+      <p className="admin-description">Manage users and their roles from this dashboard.</p>
+
+      <div className="admin-card">
+        <div className="search-controls">
+          <div className="search-radio-group">
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="method"
+                id="username"
+                value="username"
+                checked={searchMethod === 'username'}
+                onChange={(e) => setSearchParams({ method: e.target.value, search })}
+              />
+              <label htmlFor="username">Username</label>
+            </div>
+            <div className="radio-option">
+              <input
+                type="radio"
+                name="method"
+                id="email"
+                value="email"
+                checked={searchMethod === 'email'}
+                onChange={(e) => setSearchParams({ method: e.target.value, search })}
+              />
+              <label htmlFor="email">Email</label>
+            </div>
           </div>
-        ))
-      ) : (
-        <p>No Users found with this {searchMethod}</p>
-      )}
-    </>
+
+          <div className="search-input-wrapper">
+            <i className="search-icon">🔍</i>
+            <input
+              type="text"
+              className="search-input"
+              placeholder={`Search by ${searchMethod}...`}
+              value={search}
+              onChange={(e) => setSearchParams({ method: searchMethod, search: e.target.value })}
+            />
+          </div>
+        </div>
+
+        {users.length > 0 ? (
+          <table className="users-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.uid}>
+                  <td>{user.handle}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    <span className={`user-badge ${getRoleBadgeClass(user.role)}`}>
+                      {user.role}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      className={`action-button ${user.role === Roles.banned ? 'unban-button' : 'ban-button'}`}
+                      onClick={() => handleBan(user.uid)}
+                    >
+                      {user.role === Roles.banned ? 'Unban' : 'Ban'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="admin-description">No users found with this {searchMethod}</p>
+        )}
+      </div>
+
+      <div className="notification-container">
+        {notifications.map(({ id, title, message, type, closing }) => (
+          <div key={id} className={`notification${closing ? ' closing' : ''}`}>
+            <div className={`notification-icon ${type}`}>
+              {type === 'success' ? '✓' : '✕'}
+            </div>
+            <div className="notification-content">
+              <div className={`notification-title ${type}`}>{title}</div>
+              <div className="notification-message">{message}</div>
+            </div>
+            <button
+              className="notification-close"
+              onClick={() => setNotifications(prev => prev.filter(n => n.id !== id))}
+            >
+              ✕
+            </button>
+            <div className="notification-progress" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
