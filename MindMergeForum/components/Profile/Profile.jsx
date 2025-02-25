@@ -2,9 +2,8 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../src/store/app.context';
 import { updateUser } from '../../services/user.services';
 import { useNavigate } from 'react-router-dom';
-import { storage, db } from '../../src/config/firebase.config';
+import { storage } from '../../src/config/firebase.config';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ref as dbRef, update } from 'firebase/database';
 import './Profile.css';
 
 export default function Profile() {
@@ -56,10 +55,9 @@ export default function Profile() {
         firstName: state.firstName,
         lastName: state.lastName,
         phone: state.phone,
-        profilePicture: state.profilePicture // Include profile picture in update
+        profilePicture: state.profilePicture
       };
 
-      // Update both user data and profile picture
       await Promise.all([
         updateUser(userData.handle, updateData),
       ]);
