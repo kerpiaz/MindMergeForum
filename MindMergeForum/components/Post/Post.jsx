@@ -5,6 +5,7 @@ import { ref, onValue, update, push } from "firebase/database";
 import { db } from "../../src/config/firebase.config";
 import { getUserById } from "../../services/user.services";
 import "./Post.css";
+import { remove } from "firebase/database";
 
 export default function Post() {
   const { id } = useParams();
@@ -132,6 +133,21 @@ export default function Post() {
         console.error("Error saving comment:", error.message);
       });
   };
+  
+
+    const handleDeleteComment = (commentId) => {
+        if (!user) return;
+
+    const commentRef = ref(db, `posts/${id}/comments/${commentId}`);
+    remove(commentRef)
+        .then(() => {
+        console.log("The comment was successfully deleted.");
+        })
+        .catch((error) => {
+      console.error("Error deleting a comment:", error.message);
+        });
+    };
+
 
   return (
     <div className="post-details-container">
@@ -222,13 +238,13 @@ export default function Post() {
                       onChange={(e) => setEditedText(e.target.value)}
                     />
                     <div className="post-actions">
-                      <button 
+                      <button
                         className="submit-answer-button"
                         onClick={() => handleSaveEdit(commentId)}
                       >
                         Save
                       </button>
-                      <button 
+                      <button
                         className="submit-answer-button"
                         onClick={() => setEditingComment(null)}
                       >
@@ -241,30 +257,46 @@ export default function Post() {
                     <div className="post-meta">
                       <div className="author-avatar">
                         {userProfile?.profilePicture ? (
-                          <img 
-                            src={userProfile.profilePicture} 
-                            alt={commentData.userHandle} 
+                          <img
+                            src={userProfile.profilePicture}
+                            alt={commentData.userHandle}
                             className="profile-picture"
                           />
                         ) : (
-                          <span>{commentData.userHandle?.[0]?.toUpperCase() || '?'}</span>
+                          <span>
+                            {commentData.userHandle?.[0]?.toUpperCase() || "?"}
+                          </span>
                         )}
                       </div>
-                      <span className="author-name">{commentData.userHandle}</span>
+                      <span className="author-name">
+                        {commentData.userHandle}
+                      </span>
                       <div className="post-date-info">
                         <span className="date-separator">•</span>
-                        <span>{new Date(commentData.createdOn).toLocaleString()}</span>
+                        <span>
+                          {new Date(commentData.createdOn).toLocaleString()}
+                        </span>
                       </div>
                     </div>
                     <div className="post-content">
                       <p>{commentData.text}</p>
                       {user && user.uid === commentData.userId && (
-                        <button
-                          className="submit-answer-button"
-                          onClick={() => handleEditComment(commentId, commentData.text)}
-                        >
-                          Edit
-                        </button>
+                        <div className="comment-actions">
+                          <button
+                            className="submit-answer-button"
+                            onClick={() =>
+                              handleEditComment(commentId, commentData.text)
+                            }
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="submit-answer-button delete-button"
+                            onClick={() => handleDeleteComment(commentId)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       )}
                     </div>
                   </>
