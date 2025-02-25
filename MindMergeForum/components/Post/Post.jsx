@@ -33,8 +33,6 @@ export default function Post() {
             setPostCreatorProfile(userData.profilePicture);
           }
 
-          // Fetch profile pictures for commenters
-          // Uses async for single awaits and Promise.all for concurrent commenter data fetches to optimize performance. tnx Grok 3
           if (postData.comments) {
             const profiles = {};
             await Promise.all(

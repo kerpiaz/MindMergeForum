@@ -24,9 +24,9 @@ function App() {
   const [appState, setAppState] = useState({
     user: null,
     userData: null
-  }) //here we use useState because it sets the global state. Other components will use useContext to access it
+  })
 
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   if(appState.user !== user){
     setAppState({

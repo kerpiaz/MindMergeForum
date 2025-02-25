@@ -21,7 +21,6 @@ export default function Header() {
       .catch((error) => console.error(error.message))
   }
 
-  // If user is banned, only show the logo
   if (userData?.role === Roles.banned) {
     return (
       <header className="navbar">
