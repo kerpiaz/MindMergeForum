@@ -6,6 +6,11 @@ import { Roles } from "../../../common/roles.enum";
 import { getUserData } from "../../../services/user.services";
 import "./Login.css";
 
+/**
+ * User login component
+ * 
+ * @returns {JSX.Element} Login form
+ */
 export default function Login() {
   const { setAppState } = useContext(AppContext);
   const [email, setEmail] = useState("");
@@ -13,6 +18,14 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+/**
+ * Handles user authentication and redirection
+ * 
+ * Authenticates user, retrieves user data, updates app state,
+ * and redirects based on user role
+ * 
+ * @param {Event} e - Form submission event
+ */
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -85,7 +98,7 @@ export default function Login() {
         </form>
 
         <p className="account-prompt">
-          Don't have an account?{" "}
+          No account created yet?{" "}
           <Link to="/register" className="signup-link">
             Sign up
           </Link>

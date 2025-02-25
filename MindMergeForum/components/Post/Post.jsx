@@ -19,6 +19,12 @@ export default function Post() {
   const [postCreatorProfile, setPostCreatorProfile] = useState(null);
   const [commentUserProfiles, setCommentUserProfiles] = useState({});
 
+ /**
+ * Fetches post data and related user profiles
+ * 
+ * @effect Subscribes to real-time post updates, loads post creator profile
+ *         and all commenter profiles, cleans up subscription on unmount
+ */
   useEffect(() => {
     const postRef = ref(db, `posts/${id}`);
     const unsubscribe = onValue(
@@ -61,6 +67,11 @@ export default function Post() {
     return () => unsubscribe();
   }, [id]);
 
+/**
+ * Fetches current user's handle when authenticated
+ * 
+ * @effect Loads the current user's handle when user auth state is available
+ */
   useEffect(() => {
     if (user) {
       getUserById(user.uid).then((userData) => {
@@ -71,8 +82,19 @@ export default function Post() {
     }
   }, [user]);
 
+ /**
+ * Conditional rendering for loading state
+ * 
+ * @returns {JSX.Element} Loading indicator when post data is not yet available
+ */
   if (!post) return <div className="loading">Loading...</div>;
 
+/**
+ * Toggles like status for the current post
+ * 
+ * Adds or removes current user's ID from post's likedBy object
+ * Updates database and local state accordingly
+ */
   const handleLike = () => {
     if (!user) return;
 
@@ -93,6 +115,12 @@ export default function Post() {
     });
   };
 
+/**
+ * Submits a new comment to the current post
+ * 
+ * Validates input, creates comment object with user data and timestamp,
+ * pushes to database, and clears input field on success
+ */
   const handleCommentSubmit = () => {
     if (!user || comment.trim() === "") return;
 
@@ -113,11 +141,22 @@ export default function Post() {
       });
   };
 
+/**
+ * Initiates comment editing mode
+ * 
+ * @param {string} commentId - ID of comment to edit
+ * @param {string} currentText - Current text content of the comment
+ */
   const handleEditComment = (commentId, currentText) => {
     setEditingComment(commentId);
     setEditedText(currentText);
   };
 
+/**
+ * Saves edited comment text to database
+ * 
+ * @param {string} commentId - ID of comment being edited
+ */
   const handleSaveEdit = (commentId) => {
     if (editedText.trim() === "") return;
 
@@ -133,6 +172,12 @@ export default function Post() {
   };
   
 
+    /**
+     * Deletes a comment from the database.
+     *
+     * @param {string} commentId - The ID of the comment to be deleted.
+     * @returns {void}
+     */
     const handleDeleteComment = (commentId) => {
         if (!user) return;
 

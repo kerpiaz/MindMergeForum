@@ -6,6 +6,11 @@ import { createUserHandle, getUserByHandle } from "../../../services/user.servic
 import { Roles } from "../../../common/roles.enum";
 import "./Register.css";
 
+/**
+ * User registration component
+ * 
+ * @returns {JSX.Element} Registration form
+ */
 export default function Register() {
   const { setAppState } = useContext(AppContext);
   const [user, setUser] = useState({
@@ -20,6 +25,14 @@ export default function Register() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+/**
+ * Handles user registration with validation
+ * 
+ * Validates form inputs, checks for existing username,
+ * creates user account, and redirects on success
+ * 
+ * @param {Event} e - Form submission event
+ */
   const register = async (e) => {
     e.preventDefault();
     setError("");
@@ -62,6 +75,11 @@ export default function Register() {
         user.role
       );
 
+    /**
+    * Updates app state and redirects on successful registration
+    * 
+    * Handles Firebase auth errors with user-friendly messages
+    */
       setAppState({
         user: userCredential.user,
         userData: null,
@@ -76,6 +94,12 @@ export default function Register() {
     }
   };
 
+/**
+ * Updates user state for form fields
+ * 
+ * @param {string} prop - Property name to update
+ * @returns {Function} Event handler that updates specified property
+ */
   const updateUser = (prop) => (e) => {
     setUser({
       ...user,

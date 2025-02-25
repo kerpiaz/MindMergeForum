@@ -1,12 +1,20 @@
 import { useState, useEffect, useContext, useMemo } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation to access URL parameters
 import { getPosts, deletePost, updatePost, getPostsByTitle, getPostsByContent } from "../../../services/posts.services";
 import { getUserById } from "../../../services/user.services";
 import { AppContext } from "../../store/app.context";
 import ForumRender from "../../../components/ForumRender/ForumRender";
 import "./Forum.css";
 
+/**
+ * Forum component displaying posts with search and sort functionality
+ * 
+ * @returns {JSX.Element} Forum page with posts and controls
+ */
 export default function Forum() {
   const { userData } = useContext(AppContext);
+  const location = useLocation(); // Initialize useLocation hook
+  
   const [posts, setPosts] = useState({});
   const [userHandles, setUserHandles] = useState({});
   const [editingPost, setEditingPost] = useState(null);
@@ -17,6 +25,31 @@ export default function Forum() {
   const [searchCriteria, setSearchCriteria] = useState("title");
   const [searchQuery, setSearchQuery] = useState("");
 
+/**
+ * Extracts and applies search parameters from URL
+ * 
+ * @effect Sets search state based on URL query parameters
+ */
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const queryFromURL = queryParams.get("searchQuery");
+    const criteriaFromURL = queryParams.get("searchCriteria");
+    
+    if (queryFromURL) {
+      setSearchQuery(queryFromURL);
+    }
+    
+    if (criteriaFromURL) {
+      setSearchCriteria(criteriaFromURL);
+    }
+  }, [location]);
+
+/**
+ * Fetches posts and user data based on search criteria
+ * 
+ * @effect Loads posts filtered by search query and criteria
+ *         Retrieves user handles for post authors
+ */
   useEffect(() => {
     const fetchPostsAndHandles = async () => {
       try {
@@ -50,6 +83,11 @@ export default function Forum() {
     fetchPostsAndHandles();
   }, [searchQuery, searchCriteria]);
 
+/**
+ * Sorts posts based on selected criteria and direction
+ * 
+ * @returns {Array} Sorted array of posts
+ */
   const sortedPosts = useMemo(() => {
     const postsArray = Object.entries(posts);
     const sortModifier = sortDirection === 'asc' ? 1 : -1;
@@ -69,6 +107,11 @@ export default function Forum() {
     });
   }, [posts, sortCriteria, sortDirection]);
 
+/**
+ * Deletes a post and updates state
+ * 
+ * @param {string} postId - ID of post to delete
+ */
   const handleDelete = async (postId) => {
     try {
       await deletePost(postId);
@@ -82,12 +125,24 @@ export default function Forum() {
     }
   };
 
+/**
+ * Initiates post editing mode
+ * 
+ * @param {string} postId - ID of post to edit
+ * @param {string} title - Current post title
+ * @param {string} content - Current post content
+ */
   const handleEdit = (postId, title, content) => {
     setEditingPost(postId);
     setEditedTitle(title);
     setEditedContent(content);
   };
 
+/**
+ * Saves edited post to database and updates state
+ * 
+ * @param {string} postId - ID of post being edited
+ */
   const handleSaveEdit = async (postId) => {
     try {
       await updatePost(postId, { title: editedTitle, content: editedContent });
@@ -101,6 +156,9 @@ export default function Forum() {
     }
   };
 
+/**
+ * Cancels post editing mode
+ */
   const handleCancelEdit = () => {
     setEditingPost(null);
   };

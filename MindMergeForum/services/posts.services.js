@@ -1,6 +1,14 @@
 import { ref, push, get, remove, update } from "firebase/database";
 import { db } from "../src/config/firebase.config";
 
+/**
+ * Creates a new post in the database
+ * 
+ * @param {string} title - Post title
+ * @param {string} content - Post content
+ * @param {string} userId - ID of user creating the post
+ * @returns {Promise} Firebase database promise
+ */
 export const createPost = async (title, content, userId) => {
     try {
       const postsRef = ref(db, "posts");
@@ -17,6 +25,12 @@ export const createPost = async (title, content, userId) => {
       console.error("Error creating post:", error);
     }
   };
+
+/**
+ * Retrieves all posts from the database
+ * 
+ * @returns {Promise<Object>} Object containing all posts
+ */
   export const getPosts = async () => {
     const snapshot = await get(ref(db, 'posts'));
     if (!snapshot.exists) {
@@ -26,6 +40,13 @@ export const createPost = async (title, content, userId) => {
     return snapshot.val();
   };
 
+/**
+ * Adds user like to a post
+ * 
+ * @param {string} handle - User handle
+ * @param {string} postId - ID of post to like
+ * @returns {Promise} Firebase update promise
+ */
   export const likePost = async(handle, postId) =>{
     const updatedPost =  {
       [`posts/${postId}/likedBy/${handle}`]:true,
@@ -34,7 +55,14 @@ export const createPost = async (title, content, userId) => {
   
     return update(ref(db), updatedPost)
   }
-  
+
+/**
+ * Removes user like from a post
+ * 
+ * @param {string} handle - User handle
+ * @param {string} postId - ID of post to unlike
+ * @returns {Promise} Firebase update promise
+ */
   export const unlikePost = async(handle, postId) =>{
     const updatedPost =  {
       [`posts/${postId}/likedBy/${handle}`]:null,
@@ -44,6 +72,12 @@ export const createPost = async (title, content, userId) => {
     return update(ref(db), updatedPost)
   }
 
+/**
+ * Deletes a post from the database
+ * 
+ * @param {string} postId - ID of post to delete
+ * @returns {Promise} Firebase remove promise
+ */
   export const deletePost = async (postId) => {
     try {
       await remove(ref(db, `posts/${postId}`));
@@ -54,11 +88,24 @@ export const createPost = async (title, content, userId) => {
     }
   };
 
+/**
+ * Updates post data in the database
+ * 
+ * @param {string} postId - ID of post to update
+ * @param {Object} updatedData - New post data
+ * @returns {Promise} Firebase update promise
+ */
   export const updatePost = async (postId, updatedData) => {
     const postRef = ref(db, `posts/${postId}`);
     await update(postRef, updatedData);
   };
 
+/**
+ * Searches posts by title
+ * 
+ * @param {string} search - Search query
+ * @returns {Promise<Array>} Filtered posts matching search term
+ */
   export const getPostsByTitle = async (search = '') => {
     const snapshot = await get(ref(db, 'posts'));
     if (snapshot.exists()) {
@@ -70,7 +117,13 @@ export const createPost = async (title, content, userId) => {
     }
     return {};
   };
-  
+
+/**
+ * Searches posts by content
+ * 
+ * @param {string} search - Search query
+ * @returns {Promise<Array>} Filtered posts matching search term
+ */
   export const getPostsByContent = async (search = '') => {
     const snapshot = await get(ref(db, 'posts'));
     if (snapshot.exists()) {

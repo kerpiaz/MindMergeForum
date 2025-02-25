@@ -19,6 +19,13 @@ import BannedUser from "../components/BannedUser/BannedUser";
 import AdminTools from "./pages/AdminTools/AdminTools";
 import PasswordChange from '../components/PasswordChange/PasswordChange'
 
+/**
+ * Main application component
+ * 
+ * Manages global authentication state and user data
+ * 
+ * @returns {JSX.Element} Application with routing
+ */
 function App() {
 
   const [appState, setAppState] = useState({
@@ -28,6 +35,9 @@ function App() {
 
   const [user] = useAuthState(auth);
 
+  /**
+  * Synchronizes internal state with Firebase auth state
+  */
   if(appState.user !== user){
     setAppState({
       ...appState,
@@ -39,6 +49,12 @@ function App() {
     if(!user){
       return;
     }
+
+    /**
+     * Fetches user data when authentication state changes
+     * 
+     * @effect Retrieves and stores user profile data when user authenticates
+     */
     getUserData(appState.user?.uid)
     .then((data)=>{
       const userData = data[Object.keys(data)[0]];
