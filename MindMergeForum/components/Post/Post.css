@@ -2,240 +2,378 @@
 
 /* Main container */
 .post-details-container {
+  /* Box model */
   max-width: 960px;
+  min-width: 320px; /* Prevent container from becoming too narrow */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px;
 }
 
 /* Post card styling */
 .post-card {
-  background-color: #1a222e;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Layout */
   position: relative; /* Added for absolute positioning of icons */
+  
+  /* Box model */
+  width: 100%;
+  margin-bottom: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  /* Visual */
+  background-color: #1a222e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Post header with expand/collapse */
 .post-header {
+  /* Layout */
   display: flex;
   align-items: center;
-  padding: 1rem;
-  background-color: #1a222e;
   position: relative;
+  
+  /* Box model */
+  height: 64px; /* Fixed height for header */
+  padding: 0 16px;
+  
+  /* Visual */
+  background-color: #1a222e;
 }
 
 .toggle-button {
-  background: none;
-  border: none;
-  color: #ff7b2c;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0.25rem;
+  /* Layout */
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  
+  /* Box model */
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  
+  /* Typography */
+  font-size: 19px;
+  
+  /* Visual */
+  background: none;
+  color: #ff7b2c;
+  
+  /* Animation */
   transition: transform 0.2s;
 }
 
 .toggle-button.expanded {
+  /* Animation */
   transform: rotate(180deg);
 }
 
 .vote-count {
-  margin: 0 1rem;
+  /* Box model */
+  margin: 0 16px;
+  min-width: 24px;
+  width: 24px; /* Fixed width to prevent shifts */
+  
+  /* Typography */
   font-weight: bold;
-  color: #ff7b2c;
-  min-width: 1.5rem;
   text-align: center;
+  
+  /* Colors */
+  color: #ff7b2c;
 }
 
 /* Post title */
 .post-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #ff7b2c;
-  margin: 0;
-  padding: 0 1rem;
+  /* Layout */
   flex-grow: 1;
+  
+  /* Box model */
+  margin: 0;
+  padding: 0 16px;
+  max-height: 56px; /* Prevent excessive height */
+  overflow: hidden; /* Prevent text overflow */
+  
+  /* Typography */
+  font-size: 24px;
+  font-weight: 600;
+  
+  /* Colors */
+  color: #ff7b2c;
 }
 
 /* Post metadata */
 .post-meta {
+  /* Layout */
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem 1rem 3.5rem;
+  
+  /* Box model */
+  height: 48px; /* Fixed height for metadata section */
+  padding: 0 16px 0 56px;
   border-bottom: 1px solid #2a3141;
 }
 
 .author-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: #4ade80;
+  /* Layout */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1a222e;
+  
+  /* Box model */
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  border-radius: 50%;
+  
+  /* Typography */
   font-weight: bold;
-  font-size: 0.8rem;
-  margin-right: 0.5rem;
+  font-size: 13px;
+  
+  /* Colors */
+  background-color: #4ade80;
+  color: #1a222e;
 }
 
 .author-name {
+  /* Box model */
+  margin-right: 8px;
+  
+  /* Typography */
+  font-size: 14px;
+  
+  /* Colors */
   color: #e5e7eb;
-  font-size: 0.9rem;
-  margin-right: 0.5rem;
 }
 
 .post-date-info {
-  color: #9ca3af;
-  font-size: 0.85rem;
+  /* Layout */
   display: flex;
   align-items: center;
+  
+  /* Typography */
+  font-size: 14px;
+  
+  /* Colors */
+  color: #9ca3af;
 }
 
 .date-separator {
-  margin: 0 0.5rem;
+  /* Box model */
+  margin: 0 8px;
+  
+  /* Colors */
   color: #4b5563;
 }
 
 /* Post content */
 .post-content {
-  padding: 1.5rem 1.5rem 4rem 3.5rem; /* Increased bottom padding for icons */
-  color: #e5e7eb;
-  line-height: 1.6;
-  font-size: 1rem;
+  /* Layout */
   position: relative; /* For positioning the icons container */
+  
+  /* Box model */
+  min-height: 100px; /* Minimum height to prevent collapses */
+  padding: 24px 24px 64px 56px; /* Increased bottom padding for icons */
+  
+  /* Typography */
+  font-size: 16px;
+  line-height: 1.6;
+  
+  /* Colors */
+  color: #e5e7eb;
 }
 
-/* Icons container - New */
+/* Icons container */
 .post-icons {
+  /* Layout */
   position: absolute;
-  bottom: 1rem;
-  right: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  
+  /* Box model */
+  height: 32px; /* Fixed height for icons area */
+  bottom: 16px;
+  right: 24px;
+  gap: 16px;
 }
 
 .icon-group {
+  /* Layout */
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  
+  /* Box model */
+  gap: 8px;
+  
+  /* Typography */
+  font-size: 14px;
+  
+  /* Colors */
   color: #9ca3af;
-  font-size: 0.9rem;
 }
 
 /* Answer section */
 .answer-section {
+  /* Box model */
+  width: 100%;
+  padding: 24px;
+  margin-bottom: 32px;
+  border-radius: 8px;
+  
+  /* Visual */
   background-color: #1a222e;
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
 }
 
 .answer-header {
-  color: #ff7b2c;
-  font-size: 1.25rem;
+  /* Box model */
+  height: 32px; /* Fixed height */
+  margin: 0 0 16px 0;
+  
+  /* Typography */
+  font-size: 20px;
   font-weight: 600;
-  margin: 0 0 1rem 0;
+  
+  /* Colors */
+  color: #ff7b2c;
 }
 
 .answer-form {
+  /* Layout */
   display: flex;
   flex-direction: column;
 }
 
 .answer-textarea {
+  /* Box model */
   width: 100%;
   min-height: 180px;
-  padding: 1rem;
-  background-color: #242937;
+  max-height: 400px; /* Maximum height */
+  padding: 16px;
+  margin-bottom: 16px;
   border: 1px solid #3e4758;
-  border-radius: 0.375rem;
-  color: #e5e7eb;
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
+  border-radius: 6px;
   resize: vertical;
+  
+  /* Typography */
+  font-size: 16px;
+  line-height: 1.5;
+  
+  /* Colors */
+  background-color: #242937;
+  color: #e5e7eb;
+  
+  /* Animation */
   transition: border-color 0.2s;
 }
 
 .answer-textarea:focus {
+  /* Visual */
   outline: none;
   border-color: #ff7b2c;
 }
 
 .answer-textarea::placeholder {
+  /* Colors */
   color: #6b7280;
 }
 
 .submit-answer-button {
+  /* Layout */
+  cursor: pointer;
+  
+  /* Box model */
+  height: 48px; /* Fixed height */
+  padding: 0 16px;
+  border: none;
+  border-radius: 6px;
+  
+  /* Typography */
+  font-size: 16px;
+  font-weight: 500;
+  
+  /* Colors */
   background-color: #9c8058;
   color: #ffffff;
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.875rem 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
+  
+  /* Animation */
   transition: background-color 0.2s;
 }
 
 .submit-answer-button:hover {
+  /* Colors */
   background-color: #876d47;
 }
 
 .submit-answer-button:focus {
+  /* Visual */
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 123, 44, 0.25);
 }
 
 /* Answers section */
 .answers-container {
-  margin-bottom: 2rem;
+  /* Box model */
+  width: 100%;
+  margin-bottom: 32px;
 }
 
 .answers-header {
+  /* Layout */
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  
+  /* Box model */
+  height: 32px; /* Fixed height */
+  margin-bottom: 16px;
 }
 
 .answers-count {
-  color: #ff7b2c;
-  font-size: 1.25rem;
+  /* Typography */
+  font-size: 20px;
   font-weight: 600;
+  
+  /* Colors */
+  color: #ff7b2c;
 }
 
 .no-answers-message {
+  /* Box model */
+  height: 120px; /* Fixed height to prevent layout shifts when messages appear/disappear */
+  padding: 48px 0;
+  
+  /* Typography */
+  font-size: 18px;
   text-align: center;
+  
+  /* Colors */
   color: #9ca3af;
-  padding: 3rem 0;
-  font-size: 1.1rem;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .post-meta {
+    /* Layout */
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    
+    /* Box model */
+    gap: 8px;
   }
   
   .post-title {
-    font-size: 1.25rem;
+    /* Typography */
+    font-size: 20px;
   }
   
   .post-content {
-    padding: 1.25rem 1.25rem 4rem 1.25rem;
+    /* Box model */
+    padding: 20px 20px 64px 20px;
   }
 
   .post-icons {
-    bottom: 0.75rem;
-    right: 1rem;
+    /* Box model */
+    bottom: 12px;
+    right: 16px;
   }
 }
 
@@ -247,24 +385,33 @@
 }
 
 .vote-count.changed {
+  /* Animation */
   animation: vote-change 0.3s ease-in-out;
 }
 
 /* Custom scrollbar for textarea */
 .answer-textarea::-webkit-scrollbar {
+  /* Box model */
   width: 8px;
 }
 
 .answer-textarea::-webkit-scrollbar-track {
-  background: #242937;
+  /* Box model */
   border-radius: 4px;
+  
+  /* Colors */
+  background: #242937;
 }
 
 .answer-textarea::-webkit-scrollbar-thumb {
-  background-color: #3e4758;
+  /* Box model */
   border-radius: 4px;
+  
+  /* Colors */
+  background-color: #3e4758;
 }
 
 .answer-textarea::-webkit-scrollbar-thumb:hover {
+  /* Colors */
   background-color: #4b5569;
 }

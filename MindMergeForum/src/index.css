@@ -1,12 +1,15 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
+  /* Layout */
   color-scheme: light dark;
+  
+  /* Colors */
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
+  
+  /* Typography */
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -14,55 +17,86 @@
 }
 
 a {
+  /* Typography */
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
+  
+  /* Colors */
+  color: #646cff;
 }
+
 a:hover {
+  /* Colors */
   color: #535bf2;
 }
 
 body {
-  margin: 0;
+  /* Layout */
   display: flex;
   place-items: center;
+  
+  /* Box model */
+  margin: 0;
+  padding-top: 60px; /* Space for the fixed header */
   min-width: 320px;
   min-height: 100vh;
+  
+  /* Visual */
+  position: relative; /* Establish position context */
 }
 
 h1 {
-  font-size: 3.2em;
+  /* Typography */
+  font-size: 32px;
   line-height: 1.1;
 }
 
 button {
+  /* Layout */
+  cursor: pointer;
+  
+  /* Box model */
+  padding: 10px 20px;
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  
+  /* Typography */
+  font-size: 16px;
   font-weight: 500;
   font-family: inherit;
+  
+  /* Visual */
   background-color: #1a1a1a;
-  cursor: pointer;
+  
+  /* Animation */
   transition: border-color 0.25s;
 }
+
 button:hover {
+  /* Visual */
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
+  /* Visual */
   outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
+    /* Colors */
     color: #213547;
     background-color: #ffffff;
   }
+  
   a:hover {
+    /* Colors */
     color: #747bff;
   }
+  
   button {
+    /* Visual */
     background-color: #f9f9f9;
   }
 }

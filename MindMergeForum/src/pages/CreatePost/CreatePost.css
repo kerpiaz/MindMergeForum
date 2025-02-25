@@ -2,212 +2,314 @@
 
 /* Main container */
 .create-post-container {
+  /* Box model */
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px;
 }
 
 /* Page title */
 .page-title {
-  color: #ff7b2c;
-  font-size: 2rem;
+  /* Box model */
+  margin-bottom: 16px;
+  
+  /* Typography */
+  font-size: 32px;
   font-weight: bold;
-  margin-bottom: 1rem;
+  
+  /* Colors */
+  color: #ff7b2c;
 }
 
 /* Page description */
 .page-description {
+  /* Box model */
+  margin-bottom: 32px;
+  
+  /* Typography */
+  font-size: 16px;
+  
+  /* Colors */
   color: #9ca3af;
-  font-size: 1rem;
-  margin-bottom: 2rem;
 }
 
 /* Guidelines card */
 .guidelines-card {
+  /* Box model */
+  padding: 24px;
+  margin-bottom: 32px;
+  border-radius: 8px;
+  
+  /* Visual */
   background-color: #1a222e;
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
 }
 
 .guidelines-title {
-  color: #ff7b2c;
-  font-size: 1.25rem;
+  /* Box model */
+  margin-bottom: 20px;
+  
+  /* Typography */
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 1.25rem;
+  
+  /* Colors */
+  color: #ff7b2c;
 }
 
 .guidelines-list {
-  margin-bottom: 1.5rem;
+  /* Box model */
+  margin-bottom: 24px;
 }
 
 .guideline-item {
+  /* Layout */
   display: flex;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  
+  /* Box model */
+  margin-bottom: 16px;
+  
+  /* Colors */
   color: #e5e7eb;
 }
 
 .guideline-icon {
-  margin-right: 0.75rem;
-  color: #10b981; /* Success green color */
+  /* Box model */
+  margin-right: 12px;
+  
+  /* Layout */
   flex-shrink: 0;
+  
+  /* Colors */
+  color: #10b981; /* Success green color */
 }
 
 .guideline-text {
+  /* Typography */
   line-height: 1.5;
 }
 
 /* Form divider */
 .form-divider {
+  /* Box model */
   height: 1px;
+  margin: 24px 0;
+  
+  /* Visual */
   background-color: #374151;
-  margin: 1.5rem 0;
 }
 
 /* Form section */
 .form-section {
-  margin-bottom: 1.5rem;
+  /* Box model */
+  margin-bottom: 24px;
 }
 
 .form-label {
+  /* Layout */
   display: block;
-  color: #e5e7eb;
-  font-size: 1rem;
+  
+  /* Box model */
+  margin-bottom: 8px;
+  
+  /* Typography */
+  font-size: 16px;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  
+  /* Colors */
+  color: #e5e7eb;
 }
 
 .required-marker {
+  /* Box model */
+  margin-left: 4px;
+  
+  /* Colors */
   color: #ef4444; /* Error red color */
-  margin-left: 0.25rem;
 }
 
 .form-input {
+  /* Box model */
   width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: #242937;
+  padding: 12px 16px;
   border: 1px solid #3e4758;
-  border-radius: 0.375rem;
+  border-radius: 6px;
+  
+  /* Typography */
+  font-size: 16px;
+  
+  /* Colors */
+  background-color: #242937;
   color: #e5e7eb;
-  font-size: 1rem;
+  
+  /* Animation */
   transition: border-color 0.2s;
 }
 
 .form-input:focus {
+  /* Visual */
   outline: none;
   border-color: #ff7b2c;
 }
 
 .form-input::placeholder {
+  /* Colors */
   color: #6b7280;
 }
 
 .character-count {
-  color: #9ca3af;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+  /* Box model */
+  margin-top: 8px;
+  
+  /* Typography */
+  font-size: 14px;
   text-align: right;
+  
+  /* Colors */
+  color: #9ca3af;
 }
 
 /* Textarea */
 .form-textarea {
+  /* Box model */
   width: 100%;
   min-height: 250px;
-  padding: 1rem;
-  background-color: #242937;
+  padding: 16px;
   border: 1px solid #3e4758;
-  border-radius: 0.375rem;
-  color: #e5e7eb;
-  font-size: 1rem;
-  line-height: 1.5;
+  border-radius: 6px;
   resize: vertical;
+  
+  /* Typography */
+  font-size: 16px;
+  line-height: 1.5;
+  
+  /* Colors */
+  background-color: #242937;
+  color: #e5e7eb;
+  
+  /* Animation */
   transition: border-color 0.2s;
 }
 
 .form-textarea:focus {
+  /* Visual */
   outline: none;
   border-color: #ff7b2c;
 }
 
 .form-textarea::placeholder {
+  /* Colors */
   color: #6b7280;
 }
 
 /* Submit button */
 .submit-button {
+  /* Layout */
+  cursor: pointer;
+  
+  /* Box model */
   width: 100%;
+  padding: 14px 16px;
+  margin-top: 16px;
+  border: none;
+  border-radius: 6px;
+  
+  /* Typography */
+  font-size: 16px;
+  font-weight: 500;
+  
+  /* Colors */
   background-color: #9c8058;
   color: #ffffff;
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.875rem 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
+  
+  /* Animation */
   transition: background-color 0.2s;
-  margin-top: 1rem;
 }
 
 .submit-button:hover {
+  /* Colors */
   background-color: #876d47;
 }
 
 .submit-button:focus {
+  /* Visual */
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 123, 44, 0.25);
 }
 
 /* Custom scrollbar for textarea */
 .form-textarea::-webkit-scrollbar {
+  /* Box model */
   width: 8px;
 }
 
 .form-textarea::-webkit-scrollbar-track {
-  background: #242937;
+  /* Box model */
   border-radius: 4px;
+  
+  /* Colors */
+  background: #242937;
 }
 
 .form-textarea::-webkit-scrollbar-thumb {
-  background-color: #3e4758;
+  /* Box model */
   border-radius: 4px;
+  
+  /* Colors */
+  background-color: #3e4758;
 }
 
 .form-textarea::-webkit-scrollbar-thumb:hover {
+  /* Colors */
   background-color: #4b5569;
 }
 
 /* Required field marker */
 .required-field {
+  /* Box model */
+  margin-left: 4px;
+  
+  /* Colors */
   color: #ef4444;
-  margin-left: 0.25rem;
 }
 
 /* Character counter */
 .character-counter {
+  /* Box model */
+  margin-top: 8px;
+  
+  /* Typography */
+  font-size: 14px;
+  
+  /* Colors */
   color: #9ca3af;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
 }
 
 /* Error message */
 .error-message {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  background-color: rgba(239, 68, 68, 0.1);
-  border-radius: 0.375rem;
+  /* Box model */
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 6px;
   border: 1px solid rgba(239, 68, 68, 0.2);
+  
+  /* Typography */
+  font-size: 14px;
+  
+  /* Colors */
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .create-post-container {
-    padding: 1.5rem;
+    /* Box model */
+    padding: 24px;
   }
   
   .page-title {
-    font-size: 1.75rem;
+    /* Typography */
+    font-size: 28px;
   }
 }
