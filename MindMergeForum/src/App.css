@@ -6,38 +6,38 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 8px;
+  padding: var(--space-sm);
   min-height: calc(100vh - 60px); /* Account for fixed header */
 }
 
 nav > a {
   /* Box model */
-  padding-left: 10px;
+  padding-left: var(--space-sm);
 }
 
 nav > a.active {
   /* Colors */
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .logo {
   /* Box model */
   height: 96px;
-  padding: 24px;
+  padding: var(--space-md);
   
   /* Animation */
   will-change: filter;
-  transition: filter 300ms;
+  transition: filter var(--transition-speed-medium);
 }
 
 .logo:hover {
   /* Visual */
-  filter: drop-shadow(0 0 32px #646cffaa);
+  filter: drop-shadow(0 0 32px rgba(100, 108, 255, 0.67));
 }
 
 .logo.react:hover {
   /* Visual */
-  filter: drop-shadow(0 0 32px #61dafbaa);
+  filter: drop-shadow(0 0 32px rgba(97, 218, 251, 0.67));
 }
 
 @keyframes logo-spin {
@@ -58,10 +58,10 @@ nav > a.active {
 
 .card {
   /* Box model */
-  padding: 32px;
+  padding: var(--space-xl);
 }
 
 .read-the-docs {
   /* Colors */
-  color: #888;
+  color: var(--color-text-secondary);
 }
