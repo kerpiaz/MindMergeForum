@@ -1,5 +1,12 @@
 import './BannedUser.css';
 
+/**
+ * BannedUser displays the account has been banned.
+ *
+ * @component
+ * return (
+ *   <BannedUser /> * )
+ */
 export default function BannedUser() {
   return (
     <div className="banned-container">

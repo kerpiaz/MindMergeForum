@@ -4,6 +4,14 @@ import { useSearchParams } from "react-router-dom";
 import { Roles } from "../../../common/roles.enum";
 import "./AdminTools.css";
 
+/**
+ * Admin tools component for user management
+ * 
+ * Provides interface for administrators to search, view, and manage users
+ * including the ability to ban/unban users
+ * 
+ * @returns {JSX.Element} Admin dashboard interface
+ */
 export default function AdminTools() {
   const [users, setUsers] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,6 +19,11 @@ export default function AdminTools() {
   const search = searchParams.get('search') || '';
   const searchMethod = searchParams.get('method') || 'username';
 
+/**
+ * Fetches and filters users based on search parameters
+ * 
+ * @effect Loads users filtered by search term and method (username/email)
+ */
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -31,6 +44,13 @@ export default function AdminTools() {
     fetchUsers();
   }, [search, searchMethod]);
 
+/**
+ * Creates and manages temporary notifications
+ * 
+ * @param {string} title - Notification title
+ * @param {string} message - Notification message
+ * @param {string} type - Notification type ('success' or 'error')
+ */
   const showNotification = (title, message, type = 'success') => {
     const id = Date.now();
     setNotifications(prev => [...prev, { id, title, message, type }]);
@@ -44,6 +64,11 @@ export default function AdminTools() {
     }, 5000);
   };
 
+/**
+ * Toggles user ban status
+ * 
+ * @param {string} uid - User ID to ban/unban
+ */
   const handleBan = async (uid) => {
     try {
       const user = users.find((u) => u.uid === uid);
@@ -63,6 +88,12 @@ export default function AdminTools() {
     }
   };
 
+/**
+ * Determines CSS class for role badge
+ * 
+ * @param {string} role - User role
+ * @returns {string} CSS class name for styling
+ */
   const getRoleBadgeClass = (role) => {
     switch (role) {
       case Roles.admin:

@@ -3,6 +3,16 @@
 import { db } from './tests-config/firebase.test.config.js';
 import { ref, set, get, remove } from 'firebase/database';
 
+/**
+ * Tests Firebase database connection
+ * 
+ * Performs CRUD operations to verify database connectivity:
+ * 1. Creates test data
+ * 2. Reads test data
+ * 3. Deletes test data
+ * 
+ * Exits with code 0 on success or 1 on failure
+ */
 const testDbConnection = async () => {
   const testData = {
     title: 'Test Forum Post',

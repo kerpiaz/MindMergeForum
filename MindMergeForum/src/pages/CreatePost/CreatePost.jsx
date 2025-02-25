@@ -4,12 +4,27 @@ import { createPost } from "../../../services/posts.services";
 import { auth } from "../../config/firebase.config";
 import "./CreatePost.css";
 
+/**
+ * Post creation component
+ * 
+ * Provides form for users to create new forum posts with validation
+ * 
+ * @returns {JSX.Element} Post creation form
+ */
 export default function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+/**
+ * Validates and submits new post
+ * 
+ * Performs length validation on title and content before submission
+ * Navigates to forum on success
+ * 
+ * @param {Event} e - Form submission event
+ */
   const handleCreatePost = async (e) => {
     e.preventDefault();
     if (title.length < 16 || title.length > 64) {

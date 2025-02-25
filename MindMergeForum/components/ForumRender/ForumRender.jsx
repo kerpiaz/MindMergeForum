@@ -3,6 +3,32 @@ import { auth } from '../../src/config/firebase.config';
 import { Roles } from '../../common/roles.enum';
 import PropTypes from 'prop-types';
 
+/**
+ * Renders a forum post with editing capabilities
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.postId - Unique identifier for the post
+ * @param {Object} props.post - Post data
+ * @param {string} props.post.title - Post title
+ * @param {string} props.post.content - Post content
+ * @param {string} props.post.userId - ID of user who created the post
+ * @param {string|Date} props.post.createdOn - Post creation timestamp
+ * @param {Object} [props.post.likedBy] - Object containing users who liked the post
+ * @param {Object} [props.post.comments] - Object containing post comments
+ * @param {Object} props.userHandles - Map of user IDs to user profile data
+ * @param {string} [props.editingPost] - ID of post currently being edited
+ * @param {string} props.editedTitle - Current value of title in edit mode
+ * @param {string} props.editedContent - Current value of content in edit mode
+ * @param {Function} props.setEditedTitle - Function to update edited title
+ * @param {Function} props.setEditedContent - Function to update edited content
+ * @param {Function} props.handleSaveEdit - Function to save post edits
+ * @param {Function} props.handleCancelEdit - Function to cancel editing
+ * @param {Function} props.handleEdit - Function to enter edit mode
+ * @param {Function} props.handleDelete - Function to delete post
+ * @param {Object} [props.userData] - Current user data
+ * @param {string} [props.userData.role] - User role for permission checks
+ * @returns {JSX.Element} Rendered forum post
+ */
 export default function ForumRender({
     postId,
     post,

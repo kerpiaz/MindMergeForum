@@ -4,10 +4,20 @@ import { getPosts } from "../../../services/posts.services";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
+/**
+ * Home page component displaying site statistics
+ * 
+ * @returns {JSX.Element} Home page with user and post counts
+ */
 export default function Home() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPosts, setTotalPosts] = useState(0);
 
+/**
+ * Fetches and displays total user and post counts
+ * 
+ * @effect Retrieves statistics on component mount
+ */
   useEffect(() => {
     async function fetchTotalUsersAndPosts() {
       const totalUsers = await getTotalUsers();

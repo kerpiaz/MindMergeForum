@@ -6,6 +6,14 @@ import { storage } from '../../src/config/firebase.config';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './Profile.css';
 
+/**
+ * User profile component with edit functionality
+ * 
+ * Displays and allows editing of user profile information including
+ * name, phone number, and profile picture
+ * 
+ * @returns {JSX.Element} User profile page
+ */
 export default function Profile() {
   const { userData, setAppState } = useContext(AppContext);
   const [state, setState] = useState({
@@ -19,6 +27,11 @@ export default function Profile() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
+/**
+ * Initializes form state with user data
+ * 
+ * @effect Updates form fields when user data becomes available
+ */
   useEffect(() => {
     if (userData) {
       setState({
@@ -32,10 +45,17 @@ export default function Profile() {
     }
   }, [userData]);
 
-  const handleEdit = () => {
+// Enables profile editing mode
+  const handleEdit = () => { 
     setState(prevState => ({ ...prevState, isEditing: true }));
   };
 
+/**
+ * Validates and saves profile changes
+ * 
+ * Performs input validation, updates database, refreshes app state,
+ * and exits edit mode on success
+ */
   const handleSave = async () => {
     try {
       if (!userData || !userData.uid) {
@@ -75,10 +95,20 @@ export default function Profile() {
     }
   };
 
+/**
+ * Triggers file input click when profile picture is clicked
+ */
   const handleProfilePictureClick = () => {
     fileInputRef.current?.click();
   };
 
+/**
+ * Handles profile picture upload
+ * 
+ * Uploads selected image to Firebase Storage and updates state with download URL
+ * 
+ * @param {Event} event - File input change event
+ */
   const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file || !userData?.uid) return;
@@ -94,10 +124,14 @@ export default function Profile() {
     }
   };
 
+  // Navigates to password change page
   const handleChangePassword = () => {
     navigate("/password-change");
   };
 
+/**
+ * Cancels edit mode and resets form to original values
+ */
   const handleCancel = () => {
     setState({
       isEditing: false,
@@ -109,6 +143,11 @@ export default function Profile() {
     });
   };
 
+/**
+ * Conditional rendering for authentication and loading states
+ * 
+ * @returns {JSX.Element} Message prompting login or loading indicator
+ */
   if (!userData) return <div className="loading">Please log in to view your profile.</div>;
   if (state.loading) return <div className="loading">Loading profile...</div>;
 

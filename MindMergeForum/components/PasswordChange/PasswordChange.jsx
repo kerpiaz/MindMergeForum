@@ -13,6 +13,11 @@ export default function PasswordChange(){
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const navigate = useNavigate();
 
+ /**
+ * Auto-dismisses notifications and redirects on success
+ * 
+ * @effect Hides notification after 3s and navigates to profile on success
+ */
     useEffect(() => {
         if (notification.show) {
             const timer = setTimeout(() => {
@@ -25,10 +30,22 @@ export default function PasswordChange(){
         }
     }, [notification.show, notification.type, navigate]);
 
+ /**
+ * Displays a notification with specified message and type
+ * 
+ * @param {string} message - Text to display in notification
+ * @param {string} type - Notification type ('success' or 'error')
+ */
     const showNotification = (message, type) => {
         setNotification({ show: true, message, type });
     };
 
+    /**
+ * Validates and processes password change request
+ * 
+ * Performs validation checks, reauthenticates user, and updates password
+ * Shows appropriate notifications for success or errors
+ */
     const handleChangePassword = async () => {
         if(currentPassword === newPassword){
             showNotification('The new password must not match the previous password', 'error');
@@ -49,14 +66,23 @@ export default function PasswordChange(){
         }
     }
 
+/**
+ * Navigates back to user profile page
+ */
     const handleCancel = () => {
         navigate('/user-profile');
     }
 
+/**
+ * Toggles visibility of current password field
+ */
     const toggleCurrentPasswordVisibility = () => {
         setShowCurrentPassword(!showCurrentPassword);
     }
 
+/**
+ * Toggles visibility of new password field
+ */
     const toggleNewPasswordVisibility = () => {
         setShowNewPassword(!showNewPassword);
     }
