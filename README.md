@@ -4,6 +4,7 @@
 
 - Clonign repository and then running npm install
 - Once everything is installed - npm run dev
+- DB connection test - npm test-db
 
 ## User Authentication & Management
 
