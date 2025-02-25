@@ -1,28 +1,43 @@
 #root {
+  /* Layout */
+  position: relative;
+  
+  /* Box model */
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 8px;
+  min-height: calc(100vh - 60px); /* Account for fixed header */
 }
 
-nav > a{
+nav > a {
+  /* Box model */
   padding-left: 10px;
 }
 
-nav > a.active{
-  color: white
+nav > a.active {
+  /* Colors */
+  color: white;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  /* Box model */
+  height: 96px;
+  padding: 24px;
+  
+  /* Animation */
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  /* Visual */
+  filter: drop-shadow(0 0 32px #646cffaa);
 }
+
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  /* Visual */
+  filter: drop-shadow(0 0 32px #61dafbaa);
 }
 
 @keyframes logo-spin {
@@ -36,14 +51,17 @@ nav > a.active{
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
+    /* Animation */
     animation: logo-spin infinite 20s linear;
   }
 }
 
 .card {
-  padding: 2em;
+  /* Box model */
+  padding: 32px;
 }
 
 .read-the-docs {
+  /* Colors */
   color: #888;
 }
