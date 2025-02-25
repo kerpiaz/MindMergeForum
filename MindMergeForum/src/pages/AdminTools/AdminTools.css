@@ -6,7 +6,8 @@
   max-width: 900px;
   min-width: 320px;
   margin: 0 auto;
-  padding: 32px;
+  padding: var(--space-xl);
+  box-sizing: border-box;
 }
 
 /* Page title and description */
@@ -36,11 +37,13 @@
 /* Admin card */
 .admin-card {
   /* Box model */
-  padding: 32px;
-  border-radius: 8px;
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+  width: 100%;
   
   /* Visual */
-  background-color: #1a222e;
+  background-color: var(--color-bg-card);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -53,8 +56,8 @@
   
   /* Box model */
   min-height: 60px; /* Fixed height to prevent layout shifts */
-  margin-bottom: 24px;
-  gap: 16px;
+  margin-bottom: var(--space-md);
+  gap: var(--space-sm); /* Reduced gap since radio group has its own margin */
 }
 
 .search-radio-group {
@@ -64,7 +67,11 @@
   
   /* Box model */
   min-width: 240px; /* Prevent shrinking too much */
-  gap: 24px;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary);
+  margin-bottom: var(--space-sm);
 }
 
 .radio-option {
@@ -129,8 +136,9 @@
   
   /* Box model */
   min-width: 200px; /* Ensure minimum width */
-  max-width: 70%; /* Limit width to stay inside container */
+  max-width: 600px; /* Fixed maximum width */
   height: 44px; /* Fixed height to prevent jumps */
+  box-sizing: border-box;
 }
 
 .search-input {
@@ -138,29 +146,31 @@
   width: 100%;
   height: 44px; /* Fixed height to match wrapper */
   padding: 0 16px 0 40px; /* Right padding for text, left for icon */
-  border: 1px solid #3e4758;
-  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
   
   /* Typography */
   font-size: 16px;
   
   /* Colors */
-  background-color: #242937;
-  color: #e5e7eb;
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
   
   /* Animation */
-  transition: border-color 0.2s;
+  transition: border-color var(--transition-speed-fast);
 }
 
 .search-input:focus {
   /* Visual */
   outline: none;
-  border-color: #ff7b2c;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 123, 44, 0.2);
 }
 
 .search-input::placeholder {
   /* Colors */
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 .search-icon {

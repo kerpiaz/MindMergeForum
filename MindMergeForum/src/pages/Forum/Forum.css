@@ -3,7 +3,7 @@
   /* Box model */
   max-width: 1100px;
   margin: 0 auto;
-  padding: 32px;
+  padding: var(--space-xl);
 }
 
 .forum-header {
@@ -12,7 +12,7 @@
   align-items: center;
   
   /* Box model */
-  margin-bottom: 32px;
+  margin-bottom: var(--space-xl);
 }
 
 .forum-title {
@@ -24,7 +24,7 @@
   font-weight: bold;
   
   /* Colors */
-  color: #ff7b2c;
+  color: var(--color-primary);
 }
 
 /* Filter Controls */
@@ -34,38 +34,47 @@
   flex-direction: column; /* Stack filter groups vertically */
   
   /* Box model */
-  padding: 24px;
-  margin-bottom: 32px;
-  border-radius: 8px;
-  gap: 16px;
+  padding: var(--space-md);
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
+  gap: var(--space-sm); /* Reduced gap since filter groups have their own margin */
   
   /* Visual */
-  background-color: #1a1d24;
+  background-color: var(--color-bg-card);
 }
 
 .filter-group {
   /* Layout */
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Align to the top for consistent layout */
   
   /* Box model */
-  gap: 24px;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary);
+  margin-bottom: var(--space-sm);
 }
 
 .filter-label {
+  /* Layout */
+  display: inline-block;
+  min-width: 80px; /* Fixed width for all labels */
+  
   /* Typography */
-  font-weight: 500;
+  font-weight: 600;
   
   /* Colors */
-  color: #e5e7eb;
+  color: var(--color-primary);
 }
 
 .radio-group {
   /* Layout */
   display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
   
   /* Box model */
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .radio-option {
@@ -74,7 +83,8 @@
   align-items: center;
   
   /* Box model */
-  gap: 8px;
+  gap: var(--space-sm);
+  min-width: 100px; /* Make all radio options consistent width */
 }
 
 .radio-option input[type="radio"] {
@@ -86,7 +96,7 @@
   width: 18px;
   height: 18px;
   margin: 0;
-  border: 2px solid #9ca3af;
+  border: 2px solid var(--color-text-secondary);
   border-radius: 50%;
   
   /* Visual */
@@ -95,7 +105,7 @@
 
 .radio-option input[type="radio"]:checked {
   /* Visual */
-  border-color: #ff7b2c;
+  border-color: var(--color-primary);
 }
 
 .radio-option input[type="radio"]:checked::after {
@@ -112,7 +122,7 @@
   border-radius: 50%;
   
   /* Visual */
-  background-color: #ff7b2c;
+  background-color: var(--color-primary);
 }
 
 .radio-option label {
@@ -120,27 +130,27 @@
   cursor: pointer;
   
   /* Colors */
-  color: #9ca3af;
+  color: var(--color-text-secondary);
 }
 
 /* Post Item */
 .post-item {
   /* Box model */
-  margin-bottom: 24px;
-  border: 1px solid #2c3139;
-  border-radius: 8px;
+  margin-bottom: var(--space-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   
   /* Visual */
-  background-color: #1a1d24;
+  background-color: var(--color-bg-card);
   
   /* Animation */
-  transition: border-color 0.2s;
+  transition: border-color var(--transition-speed-fast);
 }
 
 .post-item:hover {
   /* Visual */
-  border-color: #3e4757;
+  border-color: var(--color-border);
 }
 
 /* Post Header */
@@ -151,10 +161,10 @@
   cursor: pointer;
   
   /* Box model */
-  padding: 16px 24px;
+  padding: var(--space-md) var(--space-md);
   
   /* Visual */
-  background-color: #242937;
+  background-color: var(--color-bg-input);
 }
 
 .post-toggle {
@@ -170,10 +180,10 @@
   
   /* Visual */
   background: none;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   
   /* Animation */
-  transition: transform 0.2s;
+  transition: transform var(--transition-speed-fast);
 }
 
 .post-toggle.expanded {
@@ -188,7 +198,7 @@
   align-items: center;
   
   /* Box model */
-  margin: 0 16px;
+  margin: 0 var(--space-md);
 }
 
 .vote-button {
@@ -201,15 +211,15 @@
   
   /* Visual */
   background: none;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   
   /* Animation */
-  transition: color 0.2s, transform 0.1s;
+  transition: color var(--transition-speed-fast), transform 0.1s;
 }
 
 .vote-button:hover {
   /* Colors */
-  color: #e5e7eb;
+  color: var(--color-text-primary);
 }
 
 .vote-button:active {
@@ -219,12 +229,12 @@
 
 .vote-button.upvote.active {
   /* Colors */
-  color: #4ade80;
+  color: var(--color-success);
 }
 
 .vote-button.downvote.active {
   /* Colors */
-  color: #f87171;
+  color: var(--color-error);
 }
 
 .vote-count {
@@ -235,22 +245,22 @@
   font-weight: bold;
   
   /* Animation */
-  transition: color 0.2s;
+  transition: color var(--transition-speed-fast);
 }
 
 .vote-count.positive {
   /* Colors */
-  color: #4ade80;
+  color: var(--color-success);
 }
 
 .vote-count.negative {
   /* Colors */
-  color: #f87171;
+  color: var(--color-error);
 }
 
 .vote-count.zero {
   /* Colors */
-  color: #9ca3af;
+  color: var(--color-text-secondary);
 }
 
 .post-title {
@@ -263,7 +273,7 @@
   text-decoration: none;
   
   /* Colors */
-  color: #ff7b2c;
+  color: var(--color-primary);
 }
 
 .post-author {
@@ -272,8 +282,8 @@
   align-items: center;
   
   /* Box model */
-  margin-left: 16px;
-  gap: 8px;
+  margin-left: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .author-avatar {
