@@ -111,7 +111,9 @@ export const createPost = async (title, content, userId) => {
     if (snapshot.exists()) {
       if (search) {
         const posts = Object.values(snapshot.val());
-        return posts.filter(post => post.title.toLowerCase().includes(search.toLowerCase()));
+        // Create a case-insensitive RegExp that will work with any Unicode character including Cyrillic
+        const searchRegex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'iu');
+        return posts.filter(post => searchRegex.test(post.title));
       }
       return Object.values(snapshot.val());
     }
@@ -129,7 +131,9 @@ export const createPost = async (title, content, userId) => {
     if (snapshot.exists()) {
       if (search) {
         const posts = Object.values(snapshot.val());
-        return posts.filter(post => post.content.toLowerCase().includes(search.toLowerCase()));
+        // Create a case-insensitive RegExp that will work with any Unicode character including Cyrillic
+        const searchRegex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'iu');
+        return posts.filter(post => searchRegex.test(post.content));
       }
       return Object.values(snapshot.val());
     }
