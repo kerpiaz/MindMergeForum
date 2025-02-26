@@ -21,7 +21,7 @@ export default function BannedUser() {
           <h2 className="banned-details-title">What does this mean?</h2>
           <p className="banned-details-text">
             Your account has been banned due to a violation of our community guidelines 
-            or terms of service. During this period, you won't be able to:
+            or terms of service. During this period, you will not be able to:
           </p>
           <ul className="banned-details-text">
             <li>Access your account</li>
