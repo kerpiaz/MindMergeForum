@@ -2,6 +2,7 @@
 
 import { db } from './tests-config/firebase.test.config.js';
 import { ref, set, get, remove } from 'firebase/database';
+import process from 'node:process';
 
 /**
  * Tests Firebase database connection
