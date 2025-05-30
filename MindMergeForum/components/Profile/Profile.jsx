@@ -22,7 +22,9 @@ export default function Profile() {
     lastName: userData?.lastName || '',
     phone: userData?.phone || '',
     loading: !userData,
-    profilePicture: userData?.profilePicture || null
+    profilePicture: userData?.profilePicture || null,
+    apiKey: userData?.apiKey || '',
+    llmModel: userData?.llmModel || ''
   });
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -40,7 +42,9 @@ export default function Profile() {
         lastName: userData.lastName || '',
         phone: userData.phone || '',
         loading: false,
-        profilePicture: userData.profilePicture || null
+        profilePicture: userData.profilePicture || null,
+        apiKey: userData.apiKey || '',
+        llmModel: userData.llmModel || ''
       });
     }
   }, [userData]);
@@ -75,7 +79,9 @@ export default function Profile() {
         firstName: state.firstName,
         lastName: state.lastName,
         phone: state.phone,
-        profilePicture: state.profilePicture
+        profilePicture: state.profilePicture,
+        apiKey: state.apiKey,
+        llmModel: state.llmModel
       };
 
       await Promise.all([
@@ -139,7 +145,9 @@ export default function Profile() {
       lastName: userData?.lastName || '',
       phone: userData?.phone || '',
       loading: false,
-      profilePicture: userData?.profilePicture || null
+      profilePicture: userData?.profilePicture || null,
+      apiKey: userData?.apiKey || '',
+      llmModel: userData?.llmModel || ''
     });
   };
 
@@ -223,6 +231,30 @@ export default function Profile() {
                   onChange={(e) => setState({ ...state, phone: e.target.value })}
                 />
               </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="apiKey">API Key</label>
+                <input
+                  id="apiKey"
+                  type="password"
+                  className="form-input"
+                  value={state.apiKey}
+                  onChange={(e) => setState({ ...state, apiKey: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="llmModel">LLM Model</label>
+                <select
+                  id="llmModel"
+                  className="form-input"
+                  value={state.llmModel}
+                  onChange={(e) => setState({ ...state, llmModel: e.target.value })}
+                >
+                  <option value="">Select a Model</option>
+                  <option value="GPT-3.5-turbo">GPT-3.5-turbo</option>
+                  <option value="GPT-4">GPT-4</option>
+                  <option value="Gemini-Pro">Gemini-Pro</option>
+                </select>
+              </div>
             </div>
           ) : (
             <>
@@ -241,6 +273,14 @@ export default function Profile() {
               <div className="detail-item">
                 <span className="detail-label">Phone Number</span>
                 <span className="detail-value">{userData.phone}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">API Key</span>
+                <span className="detail-value">{state.apiKey ? 'Set' : 'Not Set'}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">LLM Model</span>
+                <span className="detail-value">{state.llmModel || 'Not Selected'}</span>
               </div>
             </>
           )}
