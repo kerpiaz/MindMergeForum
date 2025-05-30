@@ -4,6 +4,7 @@ import { AppContext } from "../../src/store/app.context";
 import { ref, onValue, update, push } from "firebase/database";
 import { db } from "../../src/config/firebase.config";
 import { getUserById } from "../../services/user.services";
+import { processTextWithLLM } from "../../services/llm.service.js";
 import "./Post.css";
 import { remove } from "firebase/database";
 
@@ -18,6 +19,9 @@ export default function Post() {
   const [postCreatorHandle, setPostCreatorHandle] = useState("");
   const [postCreatorProfile, setPostCreatorProfile] = useState(null);
   const [commentUserProfiles, setCommentUserProfiles] = useState({});
+  const [llmResult, setLlmResult] = useState(null);
+  const [isLlmLoading, setIsLlmLoading] = useState(false);
+  const [llmError, setLlmError] = useState(null);
 
  /**
  * Fetches post data and related user profiles
@@ -238,6 +242,42 @@ export default function Post() {
               </button>
             )}
           </div>
+          {user && (
+            <div className="llm-actions" style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+              <button
+                className="llm-action-button"
+                onClick={() => handleLlmAction('summarize')}
+                disabled={isLlmLoading}
+              >
+                Summarize
+              </button>
+              <button
+                className="llm-action-button"
+                onClick={() => handleLlmAction('explain')}
+                disabled={isLlmLoading}
+              >
+                Explain
+              </button>
+              <button
+                className="llm-action-button"
+                onClick={() => handleLlmAction('search')}
+                disabled={isLlmLoading}
+              >
+                Search (LLM)
+              </button>
+            </div>
+          )}
+          {isLlmLoading && <div className="llm-loading-message">Processing with LLM...</div>}
+          {llmError && <div className="llm-error-message" style={{ color: 'red', marginTop: '10px' }}>Error: {llmError}</div>}
+          {llmResult && (
+            <div className="llm-result-container" style={{ marginTop: '10px', padding: '10px', border: '1px solid #ccc', backgroundColor: '#f9f9f9' }}>
+              <h4>LLM Result:</h4>
+              <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{llmResult}</pre>
+              <button onClick={() => { setLlmResult(null); setLlmError(null); }} style={{ marginTop: '10px' }}>
+                Clear Result
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
