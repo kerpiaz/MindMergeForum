@@ -243,17 +243,17 @@ export default function Profile() {
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="llmModel">LLM Model</label>
-                <select
+                <input
                   id="llmModel"
+                  type="text"
                   className="form-input"
                   value={state.llmModel}
                   onChange={(e) => setState({ ...state, llmModel: e.target.value })}
-                >
-                  <option value="">Select a Model</option>
-                  <option value="GPT-3.5-turbo">GPT-3.5-turbo</option>
-                  <option value="GPT-4">GPT-4</option>
-                  <option value="Gemini-Pro">Gemini-Pro</option>
-                </select>
+                  placeholder="e.g., gpt-3.5-turbo, gemini-pro"
+                />
+                <small className="form-text text-muted" style={{ display: 'block', marginTop: '5px' }}>
+                  Examples: gpt-3.5-turbo (OpenAI), gemini-pro (Google), llama3-8b-8192 (Groq), Grok-1 (xAI), deepseek-coder (DeepSeek)
+                </small>
               </div>
             </div>
           ) : (

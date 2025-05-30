@@ -31,12 +31,12 @@ export const processTextWithLLM = async (apiKey, model, textContext, action) => 
 
   switch (action) {
     case "summarize":
-      return `This is a mock summary of the post titled '${title}' using the ${model} model. The content and replies have been considered.`;
+      return `This is a mock summary of the post titled '${title}' using your specified model: '${model}'. The content and replies have been considered.`;
     case "explain":
-      return `This is a mock explanation of the post titled '${title}' using the ${model} model. Key points from the content and replies would be elaborated here.`;
+      return `This is a mock explanation of the post titled '${title}' using your specified model: '${model}'. Key points from the content and replies would be elaborated here.`;
     case "search":
-      return `Mock search results based on the post titled '${title}' using the ${model} model would be presented here.`;
+      return `Mock search results based on the post titled '${title}' using your specified model: '${model}' would be presented here.`;
     default:
-      return `Action '${action}' is not supported by the mock LLM service for the post titled '${title}'.`;
+      return `Action '${action}' is not supported by the mock LLM service for the post titled '${title}' using your specified model: '${model}'.`;
   }
 };
