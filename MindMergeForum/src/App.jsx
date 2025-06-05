@@ -35,39 +35,40 @@ function App() {
 
   const [user] = useAuthState(auth);
 
-  /**
-  * Synchronizes internal state with Firebase auth state
-  */
-  if(appState.user !== user){
-    setAppState({
-      ...appState,
-      user,
-    })
-  }
+  useEffect(() => {
+    if (appState.user !== user) {
+      setAppState(prevState => ({ ...prevState, user }));
+    }
+  }, [user, appState.user, setAppState]);
 
-  useEffect(()=>{
-    if(!user){
+  useEffect(() => {
+    if (!user) {
       return;
     }
 
     /**
      * Fetches user data when authentication state changes
-     * 
+     *
      * @effect Retrieves and stores user profile data when user authenticates
      */
-    getUserData(appState.user?.uid)
-    .then((data)=>{
-      const userData = data[Object.keys(data)[0]];
-      setAppState({
-        ...appState,
-        userData,
-      })
+    getUserData(user?.uid)
+    .then((data) => {
+      if (data && Object.keys(data).length > 0) {
+        const userData = data[Object.keys(data)[0]];
+        setAppState(prevState => ({ ...prevState, userData }));
+      } else {
+        setAppState(prevState => ({ ...prevState, userData: null }));
+      }
     })
-  }, [user])
+    .catch(error => {
+      console.error("Error fetching user data:", error);
+      setAppState(prevState => ({ ...prevState, userData: null }));
+    });
+  }, [user, setAppState]);
 
   return (
     <BrowserRouter>
-      <AppContext.Provider value = {{...appState, setAppState}}> 
+      <AppContext.Provider value={useMemo(() => ({ ...appState, setAppState }), [appState])}>
         <Header></Header>
         <Routes>
           <Route path="/" element={<Home />} />

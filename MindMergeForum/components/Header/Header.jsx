@@ -3,7 +3,7 @@ import { AppContext } from "../../src/store/app.context";
 import { useContext } from "react";
 import { logoutUser } from "../../services/auth.services";
 import { Roles } from "../../common/roles.enum";
-import './Header.css';
+import styles from './Header.module.css';  // Updated to use CSS Module
 
 /**
  * Header component that displays navigation based on user authentication and role
@@ -38,40 +38,44 @@ export default function Header() {
   if (userData?.role === Roles.banned) {
     return (
       <header className="navbar">
-        <h1 className="logo">MindMerge Forum</h1>
-        <div className="user-section">
-          {user && <button className="logout-btn" onClick={logout}>Log Out</button>}
+        <h1 className={styles.logo}>MindMerge Forum</h1>
+        <div className={styles.userSection}>
+          {user && <button className={styles.logoutBtn} onClick={logout}>Log Out</button>}
         </div>
       </header>
     );
   }
 
+  const baseLinks = [
+    { to: "/forum", text: "Forum" },
+    { to: "/user-profile", text: "My Profile" },
+    { to: "/create-post", text: "Create Post" },
+  ];
+
   return (
     <header className="navbar">
       <h1 className="logo">MindMerge Forum</h1>
-      <nav className="nav-links">
-        <NavLink to="/" className="nav-link">Home</NavLink>
-        {user && userData && userData.role === Roles.admin && (
+      <nav className={styles.navLinks}>
+        {user && userData ? (
           <>
-            <NavLink to="/forum" className="nav-link">Forum</NavLink>
-            <NavLink to="/user-profile" className="nav-link">My Profile</NavLink>
-            <NavLink to="/create-post" className="nav-link">Create Post</NavLink>
-            <NavLink to="/admin-tools" className="nav-link">Admin Tools</NavLink>
+            <NavLink to="/" className={styles.navLink}>Home</NavLink>
+            {userData.role === Roles.admin && (
+              <NavLink to="/admin-tools" className={styles.navLink}>Admin Tools</NavLink>
+            )}
+            {baseLinks.map(link => (
+              <NavLink key={link.to} to={link.to} className={styles.navLink}>{link.text}</NavLink>
+            ))}
+          </>
+        ) : (
+          <>
+            <NavLink to="/login" className={styles.navLink}>Log in</NavLink>
+            <NavLink to="/register" className={styles.navLink}>Register</NavLink>
           </>
         )}
-        {user && userData && userData.role === Roles.user && (
-          <>
-            <NavLink to="/forum" className="nav-link">Forum</NavLink>
-            <NavLink to="/user-profile" className="nav-link">My Profile</NavLink>
-            <NavLink to="/create-post" className="nav-link">Create Post</NavLink>
-          </>
-        )}
-        {!user && <NavLink to="/login" className="nav-link">Log in</NavLink>}
-        {!user && <NavLink to="/register" className="nav-link">Register</NavLink>}
       </nav>
-      <div className="user-section">
-        {userData && <span className="welcome-text">Welcome, {userData.handle}</span>}
-        {user && <button className="logout-btn" onClick={logout}>Log Out</button>}
+      <div className={styles.userSection}>
+        {userData && <span className={styles.welcomeText}>Welcome, {userData.handle}</span>}
+        {user && <button className={styles.logoutBtn} onClick={logout}>Log Out</button>}
       </div>
     </header>
   );

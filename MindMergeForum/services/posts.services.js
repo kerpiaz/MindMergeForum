@@ -20,9 +20,10 @@ export const createPost = async (title, content, userId) => {
         comments: [],
         createdOn: new Date().toString(),
       });
-      console.log("The post was created successfully!");
+      return { success: true, message: "The post was created successfully!" };
     } catch (error) {
       console.error("Error creating post:", error);
+      throw new Error(`Error creating post: ${error.message}`);
     }
   };
 
@@ -48,13 +49,18 @@ export const createPost = async (title, content, userId) => {
  * @returns {Promise} Firebase update promise
  */
   export const likePost = async(handle, postId) =>{
-    const updatedPost =  {
-      [`posts/${postId}/likedBy/${handle}`]:true,
-      [`users/${handle}/likedPosts/${postId}`]:true,
+      try {
+        const updatedPost =  {
+          [`posts/${postId}/likedBy/${handle}`]:true,
+          [`users/${handle}/likedPosts/${postId}`]:true,
+        }
+        await update(ref(db), updatedPost);
+        return { success: true };
+      } catch (error) {
+        console.error("Error liking post:", error);
+        throw new Error(`Error liking post: ${error.message}`);
+      }
     }
-  
-    return update(ref(db), updatedPost)
-  }
 
 /**
  * Removes user like from a post
@@ -64,13 +70,18 @@ export const createPost = async (title, content, userId) => {
  * @returns {Promise} Firebase update promise
  */
   export const unlikePost = async(handle, postId) =>{
-    const updatedPost =  {
-      [`posts/${postId}/likedBy/${handle}`]:null,
-      [`users/${handle}/likedPosts/${postId}`]:null,
+      try {
+        const updatedPost =  {
+          [`posts/${postId}/likedBy/${handle}`]:null,
+          [`users/${handle}/likedPosts/${postId}`]:null,
+        }
+        await update(ref(db), updatedPost);
+        return { success: true };
+      } catch (error) {
+        console.error("Error unliking post:", error);
+        throw new Error(`Error unliking post: ${error.message}`);
+      }
     }
-  
-    return update(ref(db), updatedPost)
-  }
 
 /**
  * Deletes a post from the database
@@ -79,14 +90,14 @@ export const createPost = async (title, content, userId) => {
  * @returns {Promise} Firebase remove promise
  */
   export const deletePost = async (postId) => {
-    try {
-      await remove(ref(db, `posts/${postId}`));
-      console.log("The post was deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      throw error;
-    }
-  };
+      try {
+        await remove(ref(db, `posts/${postId}`));
+        return { success: true, message: "The post was deleted successfully!" };
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        throw new Error(`Error deleting post: ${error.message}`);
+      }
+    };
 
 /**
  * Updates post data in the database
@@ -96,9 +107,15 @@ export const createPost = async (title, content, userId) => {
  * @returns {Promise} Firebase update promise
  */
   export const updatePost = async (postId, updatedData) => {
-    const postRef = ref(db, `posts/${postId}`);
-    await update(postRef, updatedData);
-  };
+      try {
+        const postRef = ref(db, `posts/${postId}`);
+        await update(postRef, updatedData);
+        return { success: true };
+      } catch (error) {
+        console.error("Error updating post:", error);
+        throw new Error(`Error updating post: ${error.message}`);
+      }
+    };
 
 /**
  * Searches posts by title
